@@ -27,7 +27,7 @@ public class Admin_status_change extends Thread {
     {
         try
         {
-            st.execute("update tbl_order set order_status = '"+ status +"' where o_id = "+o_id);
+            //st.execute("update tbl_order set order_status = '"+ status +"' where o_id = "+o_id);
         }
         catch(Exception ex)
         {

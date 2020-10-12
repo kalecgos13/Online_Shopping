@@ -60,10 +60,10 @@ public class Add_new_product extends HttpServlet {
             if (req.getParameter("p_type").equals("special")) {
                 int old = Integer.parseInt(req.getParameter("p_old"));
                 //           st.execute("insert into tbl_product values(null," + sub_id + ",'" + p_name + "','" + p_desc + "'," + p_price + "," + p_qty + ",null,'" + p_company + "','" + p_type + "'," + old + ")");
-                st.execute("insert into tbl_product values(null," + sub_id + ",'" + p_name + "','" + p_desc + "'," + p_price + "," + p_qty + ",null,'" + p_company + "','" + p_type + "'," + old + ",'true')");
+                st.execute("insert into tbl_product(p_id,sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old_price,status) values(null," + sub_id + ",'" + p_name + "','" + p_desc + "'," + p_price + "," + p_qty + ",null,'" + p_company + "','" + p_type + "'," + old + ",'true')");
             } else {
                 //           st.execute("insert into tbl_product values(null,"+ sub_id +",'"+ p_name +"','"+ p_desc +"',"+ p_price +","+ p_qty +",null,'"+ p_company +"','normal',null)");
-                st.execute("insert into tbl_product values(null," + sub_id + ",'" + p_name + "','" + p_desc + "'," + p_price + "," + p_qty + ",null,'" + p_company + "','normal',null,'true')");
+                st.execute("insert into tbl_product(p_id,sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old_price,status) values(null," + sub_id + ",'" + p_name + "','" + p_desc + "'," + p_price + "," + p_qty + ",null,'" + p_company + "','normal',null,'true')");
             }
 
             int p_id = 0;

@@ -29,7 +29,7 @@ public class email_send {
 
     public email_send(String email_id,int code) {
         //System.out.println("From(Mail): ");
-        from = "vicky123modi@gmail.com";
+        from = "email@email.com";
         boolean fromAns = Validation.isValidEmailAddress(from);
 
         /**
@@ -41,7 +41,7 @@ public class email_send {
         //System.out.println("From(pwd): ");
         
         
-        frompwd = "9898293848";
+        frompwd = "choOUjIwK5MIfypbEZlv";
 
         //System.out.println("To: ");
         to = email_id;

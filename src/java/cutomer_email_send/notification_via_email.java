@@ -9,10 +9,10 @@ public class notification_via_email {
     String from, frompwd, d_host = "smtp.gmail.com", d_port = "465", to, subject, body;
 
     public notification_via_email(String email_id, String msg1) {
-        from = "vicky123modi@gmail.com";
+        from = "email@email.com";
         boolean fromAns = validation.isValidEmailAddress(from);
 
-        frompwd = "9898293848";
+        frompwd = "choOUjIwK5MIfypbEZlv";
 
         to = email_id;
         boolean toAns = validation.isValidEmailAddress(to);
@@ -38,7 +38,7 @@ public class notification_via_email {
                 + "								<p>You can contact or visit us during working time.</p>\n"
                 + "								<p><span>Address : </span> B-1004 Siddhi Residency Behind Suriyam Residency Pal,Surat </p>\n"
                 + "								<p><span>Tel: </span> 840-10-60120 </p>\n"
-                + "								<p><span>Email: </span> vicky123modi@gmail.com</p>\n"
+                + "								<p><span>Email: </span> email@email.com</p>\n"
                 + "								<p><span>Working Hours: </span> Mon-Sun 9:00 a.m  9:00 p.m</p>"
                 + "</div>"
                 + "</body>"

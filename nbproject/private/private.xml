@@ -11,6 +11,23 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/README.md</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/nbproject/project.properties</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/Admin/upload.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/nbproject/project.xml</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/Forgot_pass/email_send.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/database/check_data.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/User_detail/RegisterServlet.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/login_logout/LoginServlet.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/database/Database_connection.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/cutomer_email_send/validation.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/cutomer_email_send/notification_via_email.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/User_detail/addUserDetalsServlet.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/web/includesPage/_joinNow.jsp</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/login_logout/LogoutServlet.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/Admin/Algorithm_password.java</file>
+            <file>file:/Users/owen/NetBeansProjects/Online_Shopping/src/java/Admin/Add_new_product.java</file>
+        </group>
     </open-files>
 </project-private>
