@@ -31,8 +31,7 @@ public class Add_new_product extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
         PrintWriter out = res.getWriter();
-
-
+        
         try {
 
             int sub_id = Integer.parseInt(req.getParameter("sub_category"));
@@ -59,9 +58,9 @@ public class Add_new_product extends HttpServlet {
 
             if (req.getParameter("p_type").equals("special")) {
                 int old = Integer.parseInt(req.getParameter("p_old"));
-                obj_connection.doPrepared("insert into tbl_product(p_id,sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old_price,status) values (null,?,?,?,?,?,null,?,?,?,'true')", new int[]{0,1,1,0,0,1,1,0}, new Object[]{sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old});
+                obj_connection.doPreparedUpdate("insert into tbl_product(p_id,sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old_price,status) values (null,?,?,?,?,?,?,?,?,'true')", new int[]{0,1,1,0,0,1,1,0}, new Object[]{sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old});
             } else {
-                obj_connection.doPrepared("insert into tbl_product(p_id,sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old_price,status) values (null,?,?,?,?,?,null,?,'normal',null,'true')", new int[]{0,1,1,0,0,1}, new Object[]{sub_id,p_name,p_desc,p_price,p_qty,p_company});
+                obj_connection.doPreparedUpdate("insert into tbl_product(p_id,sub_id,p_name,p_desc,p_price,p_qty,p_company,p_type,old_price,status) values (null,?,?,?,?,?,?,'normal',0,'true')", new int[]{0,1,1,0,0,1}, new Object[]{sub_id,p_name,p_desc,p_price,p_qty,p_company});
             }
 
             int p_id = 0;
