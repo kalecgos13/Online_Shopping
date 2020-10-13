@@ -37,7 +37,7 @@ public class Reset_pass extends HttpServlet {
                     Database_connection obj_connection = new Database_connection();   // change the password
                     Connection cnn = obj_connection.cnn;
                     Statement st = cnn.createStatement();
-                    st.execute("update tbl_login set l_pass='"+new_pass+"' where l_email='"+tmp_email+"'");
+                    obj_connection.doPreparedUpdate("update tbl_login set l_pass= ? where l_email= ?", new int[]{1,1}, new Object[]{new_pass,tmp_email});
                     
                     usersession.invalidate();    // session invalid set 
                     req.setAttribute("message", "password successfully changed");

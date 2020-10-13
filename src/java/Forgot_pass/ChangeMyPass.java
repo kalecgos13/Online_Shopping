@@ -22,12 +22,10 @@ public class ChangeMyPass extends HttpServlet {
         PrintWriter out = res.getWriter();
         try {
             Database_connection obj_connection = new Database_connection();
-            Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
             Algorithm_password a = new Algorithm_password();
             String new_pass = a.Encrypt_password(pass);
             
-            st.execute("update tbl_login set l_pass='" + new_pass + "' where l_email='" + email + "'");
+            obj_connection.doPreparedUpdate("update tbl_login set l_pass= ? where l_email= ?", new int[]{1,1}, new Object[]{new_pass,email});
             res.sendRedirect(req.getContextPath()+"/User_info.jsp");
             
         } catch (Exception ex) 

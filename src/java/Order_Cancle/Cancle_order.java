@@ -27,13 +27,13 @@ public class Cancle_order extends HttpServlet {
                 Connection cnn = obj_connection.cnn;
                 Statement st = cnn.createStatement();
                 CallableStatement cs = cnn.prepareCall("{call st_cancle_order1(?,?)}");
-                ResultSet rs = st.executeQuery("select p_id from tbl_order_detail where o_id = " + oid);
+                ResultSet rs = obj_connection.doPreparedQuery("select p_id from tbl_order_detail where o_id = ?", new int[]{0}, new Object[]{oid});
                 while (rs.next()) {
                     cs.setInt(1, oid);
                     cs.setInt(2, rs.getInt(1));
                     cs.execute();
                 }
-                rs = st.executeQuery("select l_email,u_fname from tbl_login,tbl_order,tbl_user_detail where tbl_login.l_id = tbl_order.l_id and tbl_order.l_id = tbl_user_detail.l_id and tbl_order.o_id ="+oid);
+                rs = obj_connection.doPreparedQuery("select l_email,u_fname from tbl_login,tbl_order,tbl_user_detail where tbl_login.l_id = tbl_order.l_id and tbl_order.l_id = tbl_user_detail.l_id and tbl_order.o_id = ?", new int[]{0}, new Object[]{oid});
                 String email = null;
                 String fname = null;
                 while(rs.next())
@@ -41,7 +41,7 @@ public class Cancle_order extends HttpServlet {
                     email = rs.getString(1);
                     fname = rs.getString(2);
                 }
-                st.execute("delete from tbl_order where o_id =" + oid);
+                obj_connection.doPreparedUpdate("delete from tbl_order where o_id = ?", new int[]{0}, new Object[]{oid});
                 String msg = "Hi "+fname+" Your Order "+oid+" Successfully Cancle Thnx For Visit Our Saikiran BookStore";
                 
                 validation v = new validation(email,msg);
