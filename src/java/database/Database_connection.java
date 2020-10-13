@@ -13,19 +13,23 @@ public class Database_connection {
         //   cnn = DriverManager.getConnection("jdbc:mysql://mariadb15859-saikiran.cloudhosting.rsaweb.co.za/online_db", "root", "BDGkro86104");      
     }
     
-    public ResultSet doPrepared(String query, int[] types, String[] arguments) throws SQLException {
+    public ResultSet doPrepared(String query, int[] types, Object[] arguments) throws SQLException {
 		PreparedStatement st = cnn.prepareStatement(query);
 		for(int i = 0;i<types.length;i++) {
 			/*
 			 * 0 = int
 			 * 1 = string
+                         * 2 = bool
 			 */
 			if(types[i] == 0) {
-				st.setInt(1+i, Integer.parseInt(arguments[i]));
+				st.setInt(1+i, (Integer) arguments[i]);
 			}
 			else if (types[i] == 1) {
-				st.setString(1+i, arguments[i]);
+				st.setString(1+i, (String) arguments[i]);
 			}
+                        else if(types[i] == 2) {
+                            st.setBoolean(1+i, (Boolean) arguments[i]);
+                        }
 		}
 		return st.executeQuery();
 	}
