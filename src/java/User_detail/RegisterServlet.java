@@ -36,8 +36,8 @@ public class RegisterServlet extends HttpServlet {
         }
 
         String type = "public";
-        if (req.getParameter("type") != null) {
-            type = "dealer";
+        if (usersession.getAttribute("type") != null) {
+            type = usersession.getAttribute("type");
         }
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -64,7 +64,7 @@ public class RegisterServlet extends HttpServlet {
                     String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"));
                         
 
-                    if (req.getParameter("type") != null) {
+                    if (usersession.getAttribute("type") != null) {
                         
                         
                         st1.execute("insert into tbl_login values(null,'" + req.getParameter("emailReg") + "','" + Encrypt_pass + "','" + type + "')");

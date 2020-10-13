@@ -60,6 +60,7 @@ public class LoginServlet extends HttpServlet {
                 type = rs.getString(4);
                 Cookie c1 = new Cookie("lid", String.valueOf(lid));
                 Cookie c = new Cookie("type", type);
+                usersession.setAttribute("type", type);
                 c1.setMaxAge(60 * 60 * 24);
                 c.setMaxAge(60 * 60 * 24);
                 res.addCookie(c1);
