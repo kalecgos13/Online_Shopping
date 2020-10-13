@@ -58,7 +58,8 @@ public class upload extends HttpServlet {
                 Database_connection obj_connection = new Database_connection();
                 Connection cnn = obj_connection.cnn;
                 Statement st = cnn.createStatement();
-                st.execute("update tbl_product set p_img='images/productImages/" + fname + "' where p_id = " + request.getParameter("pid"));
+                //add images/productImages/ to fname
+                obj_connection.doPreparedUpdate("update tbl_product set p_img=? where p_id = ?", new int[]{1,0}, new Object[]{"images/productImages/"+fname,Integer.parseInt(request.getParameter("pid"))});
                 request.setAttribute("p_id", request.getParameter("pid"));
                 request.setAttribute("msg", "successfully Image Upload");
                 

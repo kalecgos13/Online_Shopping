@@ -25,20 +25,18 @@ public class Admin_special_user_thread extends Thread
         {
             Database_connection obj_connection = new Database_connection();
             Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
-            st.execute("insert into tbl_special_product values(null,"+pid+","+lid+")");
+            obj_connection.doPreparedUpdate("insert into tbl_special_product values(null,?,?)", new int[]{0,0}, new Object[]{pid,lid});
             String email = null;
             String msg = null;
             String user = null;
             String p_name = null;
-            ResultSet rs = st.executeQuery("select l_email,u_fname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id ="+lid);
+            ResultSet rs = obj_connection.doPreparedQuery("select l_email,u_fname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id =?",new int[]{0},new Object[]{lid});
             while(rs.next())
             {
                 email = rs.getString(1);
                 user = rs.getString(2);
             }
-            Statement st1 = cnn.createStatement();
-            ResultSet rs1 = st1.executeQuery("select p_name from tbl_product where p_id = "+pid);
+            ResultSet rs1 = obj_connection.doPreparedQuery("select p_name from tbl_product where p_id = ?",new int[]{0},new Object[]{pid});
             while(rs1.next())
             {
                 p_name = rs1.getString(1);

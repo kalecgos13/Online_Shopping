@@ -37,10 +37,9 @@ public class Admin_add extends HttpServlet {
                 password += (char) Result;
             }
             
-            Database_connection obj_connection = new Database_connection();
+            Database_connection obj_connection = new Database_connection();          
             Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
-            ResultSet rs = st.executeQuery("select * from tbl_login where l_email ='"+ email_id+"'");
+            ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email = ?", new int[]{1}, new Object[]{email_id});
             boolean check = false;
             while(rs.next())
             {
