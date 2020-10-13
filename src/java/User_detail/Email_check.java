@@ -7,12 +7,11 @@ import java.sql.Statement;
 
 public class Email_check {
 
-    public Connection cnn;
+    public Database_connection obj_connection;
 
     public Email_check() {
         try {
-            Database_connection obj_connection = new Database_connection();
-            cnn = obj_connection.cnn;
+            obj_connection = new Database_connection();
         } catch (Exception ex) {
         }
     }
@@ -20,8 +19,7 @@ public class Email_check {
     public boolean check_email(String email_id) {
         boolean b = false;
         try {
-            Statement st = cnn.createStatement();
-            ResultSet rs = st.executeQuery("select * from tbl_login where l_email = '" + email_id + "'");
+            ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email = ?", new int[]{1}, new Object[]{email_id});
             while (rs.next()) {
                 b = true;
             }

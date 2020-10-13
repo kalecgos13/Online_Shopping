@@ -49,12 +49,9 @@ public class LoginServlet extends HttpServlet {
         String type = "";
         try {
             Database_connection obj_connection = new Database_connection();
-            Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
             Algorithm_password a = new Algorithm_password();
             String Encrypt_pass = a.Encrypt_password(pass);
-            
-            ResultSet rs = st.executeQuery("select * from tbl_login where l_email='" + email + "' and l_pass='" + Encrypt_pass + "'");
+            ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email= ? and l_pass= ?", new int[]{1,1}, new Object[]{email,Encrypt_pass});
             while (rs.next()) {
                 lid = rs.getInt(1);
                 type = rs.getString(4);

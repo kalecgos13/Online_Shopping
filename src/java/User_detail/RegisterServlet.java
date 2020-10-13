@@ -57,7 +57,6 @@ public class RegisterServlet extends HttpServlet {
                     Database_connection obj_connection = new Database_connection();
                     Connection cnn = obj_connection.cnn;
                     Statement st = cnn.createStatement();
-                    Statement st1 = cnn.createStatement();
 
 
                     Algorithm_password a = new Algorithm_password();
@@ -66,15 +65,13 @@ public class RegisterServlet extends HttpServlet {
 
                     if (req.getParameter("type") != null) {
                         
-                        
-                        st1.execute("insert into tbl_login values(null,'" + req.getParameter("emailReg") + "','" + Encrypt_pass + "','" + type + "')");
-
+                        obj_connection.doPreparedUpdate("insert into tbl_login values(null,?,?,?)", new int[]{1,1,1}, new Object[]{req.getParameter("emailReg"),Encrypt_pass,type});
                         ResultSet rs = st.executeQuery("select max(l_id) from tbl_login");
                         while (rs.next()) {
                             lid = rs.getInt(1);
 
                         }
-                        st1.execute("insert into tbl_user_detail values(null," + lid + ",'" + req.getParameter("fname") + "','" + req.getParameter("lname") + "','" + req.getParameter("gender") + "','" + req.getParameter("mobileNum") + "','" + req.getParameter("address") + "',1,1,1,'" + req.getParameter("pincode") + "','" + dateFormat.format(date) + "','" + dateFormat.format(date) + "')");
+                        obj_connection.doPreparedUpdate("insert into tbl_user_detail values(null,?,?,?,?,?,?,1,1,1,?,?,?)", new int[]{0,1,1,1,1,1,0,1,1}, new Object[]{lid,req.getParameter("fname"),req.getParameter("lname"),req.getParameter("gender"),req.getParameter("mobileNum"),req.getParameter("address"),Integer.parseInt(req.getParameter("pincode")),dateFormat.format(date),dateFormat.format(date)});
                     } else 
                     {
                         CallableStatement cb = cnn.prepareCall("{call st_new_user(?,?,?,?)}");
