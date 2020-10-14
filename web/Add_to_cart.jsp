@@ -122,9 +122,9 @@
                         //2. data will fetch and add into hashMap
                         //3. total HashMap Related Item Will Be display
 
-
+                        Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
                         try {
-                            Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+                            
 
                             HashMap<Integer, Cart> hm = (HashMap<Integer, Cart>) session.getAttribute("Cart");
 
