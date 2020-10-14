@@ -19,21 +19,20 @@
         String query = "";
         String cname = "";
         Object[] objArr = new Object[1];
-        objArr[0] = Integer.parseInt(request.getParameter("sid"));
         try {
 
             if (request.getParameter("id") != null) {
-                query = "select tbl_product.p_id,p_name,p_desc,p_price,p_img,p_company,sub_name,p_qty,old_price from tbl_product,tbl_sub_cat where tbl_product.sub_id=tbl_sub_cat.sub_id and tbl_sub_cat.c_id=? and tbl_product.p_type='special' and tbl_product.status ='true'";
+                query = "select tbl_product.p_id,p_name,p_desc,p_price,p_img,p_company,sub_name,p_qty,old_price from tbl_product,tbl_sub_cat where tbl_product.sub_id=tbl_sub_cat.sub_id and tbl_sub_cat.c_id = ? and tbl_product.p_type='special' and tbl_product.status ='true'";
                 objArr[0] = Integer.parseInt(request.getParameter("id"));
                 cname = request.getParameter("c_name");
             } else {
                 query = "select tbl_product.p_id,p_name,p_desc,p_price,p_img,p_company,sub_name,p_qty,old_price from tbl_product,tbl_sub_cat where tbl_product.sub_id=tbl_sub_cat.sub_id and tbl_product.sub_id=? and tbl_product.status = 'true' limit 0,12";
-
+                objArr[0] = Integer.parseInt(request.getParameter("sid"));
                 if (request.getParameter("page") != null) {
                     int pageno = Integer.parseInt(request.getParameter("page"));
                     query = "select tbl_product.p_id,p_name,p_desc,p_price,p_img,p_company,sub_name,p_qty,old_price from tbl_product,tbl_sub_cat where tbl_product.sub_id=tbl_sub_cat.sub_id and tbl_product.sub_id=? and tbl_product.status = 'true' limit " + ((pageno - 1) * 12) + ",12";
                 } else {
-
+                    objArr[0] = Integer.parseInt(request.getParameter("sid"));
                     ResultSet rs1 = obj_connection.doPreparedQuery("select count(*) from tbl_product where sub_id = ? and status = 'true'", new int[]{0}, objArr);
                     while (rs1.next()) {
                         int tmp = rs1.getInt(1);

@@ -130,9 +130,7 @@
                     <%
 
                         Database_connection obj_connection = new Database_connection();
-                        Connection cnn = obj_connection.cnn;
-                        Statement st = cnn.createStatement(); // Some Changes Here 
-                        ResultSet rs = st.executeQuery("select sub_id,sub_name from tbl_sub_cat where c_id = " + request.getParameter("id")+" and status = 'true'");
+                        ResultSet rs = obj_connection.doPreparedQuery("select sub_id,sub_name from tbl_sub_cat where c_id = ? and status = 'true'", new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("id"))});
 
                     %>
                     <div>
