@@ -32,7 +32,7 @@ public class Reset_pass extends HttpServlet {
             if (pass.equals(cpass)) {
 
                 try {
-                    
+                    LOG.info("Attempt to reset password of user: " + tmp_email);
                     Algorithm_password a = new Algorithm_password();
                     String new_pass = a.Encrypt_password(pass);
                     
@@ -44,9 +44,9 @@ public class Reset_pass extends HttpServlet {
                     usersession.invalidate();    // session invalid set 
                     req.setAttribute("message", "password successfully changed");
                     rd1.forward(req, res);
-                } catch (Exception ex) {
+                } catch (SQLException ex) {
                     LOG.warning("Database operation Failed due to Error: " + ex);
-                    rd.forward(req, res);
+                    res.sendRedirect(req.getContextPath() + "/Forgot_email_index.jsp");
                 }
             } else {
                 req.setAttribute("message", "Both Password is Not Match");
@@ -57,8 +57,8 @@ public class Reset_pass extends HttpServlet {
                 res.sendRedirect(req.getContextPath()+"/index.jsp");
             }
         } catch (Exception ex) {
-            LOG.warning("Failed due to Error: " + ex);
-            res.sendRedirect(req.getContextPath() + "/Forgot_email_index.jsp");
+            LOG.warning("Service failed due to Error: " + ex);
+            res.sendRedirect(req.getContextPath()+"/index.jsp");
         }
     }
 }
