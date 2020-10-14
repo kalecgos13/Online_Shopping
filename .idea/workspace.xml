@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="685c7a14-c5cb-48a0-b07d-8f12f0b98d20" name="Default" comment="">
+    <list default="true" id="685c7a14-c5cb-48a0-b07d-8f12f0b98d20" name="Default" comment="Fixed index.jsp cookie authentication">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/Forgot_pass/email_send.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/Forgot_pass/email_send.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/database/Database_connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/database/Database_connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/java/database/check_data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/java/database/check_data.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,6 +31,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1iBQGLKsPsf2Ze1rwQ3eia47zFU" />
@@ -79,16 +105,60 @@
       <option name="presentableId" value="Default" />
       <updated>1518948628303</updated>
       <workItem from="1601378414217" duration="3394000" />
+      <workItem from="1602591097275" duration="5284000" />
     </task>
+    <task id="LOCAL-00001" summary="Fixed brute force attack">
+      <created>1602592023001</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1602592023001</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed dealer request forgery">
+      <created>1602592989203</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1602592989203</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixed index.jsp cookie authentication">
+      <created>1602593308344</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1602593308344</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fixed brute force attack" />
+    <MESSAGE value="Fixed dealer request forgery" />
+    <MESSAGE value="Fixed index.jsp cookie authentication" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed index.jsp cookie authentication" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2094" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601378491132">
       <screen x="1680" y="0" width="1920" height="1040" />
     </state>
     <state x="2094" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1010/1680.0.1920.1040@1680.0.1920.1040" timestamp="1601378491132" />
+    <state x="2232" y="252" key="Vcs.Push.Dialog.v2" timestamp="1602593312194">
+      <screen x="1680" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2232" y="252" key="Vcs.Push.Dialog.v2/0.0.1680.1010/1680.0.1920.1040@1680.0.1920.1040" timestamp="1602593312194" />
   </component>
 </project>

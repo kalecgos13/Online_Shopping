@@ -29,7 +29,14 @@ public class email_send {
 
     public email_send(String email_id,int code) {
         //System.out.println("From(Mail): ");
-        from = "email@email.com";
+        FileInputStream inputStream = new FileInputStream("..\\totally_not_credentials.txt");
+        try {
+            String everything = IOUtils.toString(inputStream);
+            from = everything.split("\n")[0];
+            frompwd = everything.split("\n")[1];
+        } finally {
+            inputStream.close();
+        }
         boolean fromAns = Validation.isValidEmailAddress(from);
 
         /**
@@ -39,9 +46,6 @@ public class email_send {
             }*
          */
         //System.out.println("From(pwd): ");
-        
-        
-        frompwd = "choOUjIwK5MIfypbEZlv";
 
         //System.out.println("To: ");
         to = email_id;

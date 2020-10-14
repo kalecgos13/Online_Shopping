@@ -15,7 +15,17 @@ public class check_data {
 
     public static void main(String args[]) throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
-        Connection cnn = DriverManager.getConnection("jdbc:mysql://localhost:3306/online_shopping", "root", "root");
+        FileInputStream inputStream = new FileInputStream("..\\totally_not_credentials.txt");
+        String username, password, email;
+        try {
+            String everything = IOUtils.toString(inputStream);
+            username = everything.split("\n")[2];
+            password = everything.split("\n")[3];
+            email = everything.split("\n")[0];
+        } finally {
+            inputStream.close();
+        }
+        Connection cnn = DriverManager.getConnection("jdbc:mysql://localhost:3306/online_shopping", username, password);
         Statement st = cnn.createStatement();
         ResultSet rs = st.executeQuery("select l_email,u_fname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id =" + 1);
         while (rs.next()) {
@@ -24,6 +34,6 @@ public class check_data {
         }
 
         Email_check check = new Email_check();
-        System.out.println(check.check_email("email@email.com"));
+        System.out.println(check.check_email(email));
     }
 }

@@ -9,10 +9,15 @@ public class notification_via_email {
     String from, frompwd, d_host = "smtp.gmail.com", d_port = "465", to, subject, body;
 
     public notification_via_email(String email_id, String msg1) {
-        from = "email@email.com";
+        String from, frompwd;
+        try {
+            String everything = IOUtils.toString(inputStream);
+            from = everything.split("\n")[0];
+            frompwd = everything.split("\n")[1];
+        } finally {
+            inputStream.close();
+        }
         boolean fromAns = validation.isValidEmailAddress(from);
-
-        frompwd = "choOUjIwK5MIfypbEZlv";
 
         to = email_id;
         boolean toAns = validation.isValidEmailAddress(to);
