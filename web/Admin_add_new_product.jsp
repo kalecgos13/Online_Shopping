@@ -287,8 +287,7 @@
                     <%
                         if (request.getParameter(
                                 "cid") != null) {
-                            Statement st1 = cnn.createStatement();
-                            ResultSet rs1 = st1.executeQuery("select sub_id,sub_name from tbl_sub_cat where c_id = " + request.getParameter("cid")+" and status = 'true'");
+                            ResultSet rs1 = obj_connection.doPreparedQuery("select sub_id,sub_name from tbl_sub_cat where c_id = ? and status = 'true'", new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("cid"))})''
                     %>
 
 

@@ -220,9 +220,7 @@
                     </div><br>
 
                     <% Database_connection obj_connection = new Database_connection();
-                        Connection cnn1 = obj_connection.cnn;
-                        Statement st1 = cnn1.createStatement();
-                        ResultSet rs1 = st1.executeQuery("select p_img from tbl_product where p_id =" + p_id);
+                        ResultSet rs1 = obj_connection.doPreparedQuery("select p_img from tbl_product where p_id = ?", new int[]{0}, new Object[]{Integer.parseInt(p_id)});
                         while (rs1.next()) {
 
                             String tmp = rs1.getString(1);
@@ -282,9 +280,7 @@
 
 
                         <%
-                            Connection cnn = obj_connection.cnn;
-                            Statement st = cnn.createStatement();
-                            ResultSet rs = st.executeQuery("select d_img_id,d_img_name from tbl_display_img where p_id =" + p_id);
+                            ResultSet rs = obj_connection.doPreparedQuery("select d_img_id,d_img_name from tbl_display_img where p_id = ?", new int[]{0}, new Object[]{Integer.parseInt(p_id)});
                             boolean b = false;
                             int i = 1;
                             while (rs.next()) {

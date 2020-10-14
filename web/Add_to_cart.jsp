@@ -173,7 +173,7 @@
                                 Database_connection obj_connection = new Database_connection();
                                 Connection cnn = obj_connection.cnn;
                                 Statement st = cnn.createStatement();
-                                ResultSet rs = st.executeQuery("select * from tbl_product where p_id=" + pid);
+                                ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_product where p_id=?", new int[]{0}, new Object[]{Integer.parseInt(pid)});
                                 while (rs.next()) {
                                     int tmp = rs.getInt(1);
                                     product_name = rs.getString(3);
