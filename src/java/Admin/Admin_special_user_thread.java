@@ -2,10 +2,11 @@ package Admin;
 import cutomer_email_send.validation;
 import database.*;
 import java.sql.*;
+import java.util.logging.*;
 
 public class Admin_special_user_thread extends Thread 
 {
-
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
     int lid;
     int pid;
@@ -55,7 +56,7 @@ public class Admin_special_user_thread extends Thread
         }
         catch(Exception ex)
         {
-            
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
     

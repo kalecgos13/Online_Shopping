@@ -17,9 +17,10 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.general.*;
 import org.jfree.data.*;
 import org.jfree.data.category.DefaultCategoryDataset;
-
+import java.util.logging.*;
 
 public class month_report_thread extends Thread {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     ServletContext c;
 
@@ -75,11 +76,11 @@ public class month_report_thread extends Thread {
                 final File file1 = new File(c.getRealPath(".") + "/images/productImages/category" + month + year + ".png");
                 ChartUtilities.saveChartAsPNG(file1, barChart, 700, 450, info);
             } catch (Exception e) {
-                
+                LOG.warning("Saving chart as PNG Failed due to Error: " + e);
             }
 
         } catch (Exception ex) {
-            
+            LOG.warning("run() Failed due to Error: " + ex);
         }
 
     }

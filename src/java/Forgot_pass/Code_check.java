@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.logging.*;
 
 @WebServlet(name = "Code_check", urlPatterns = {"/Code_check"})
 public class Code_check extends HttpServlet
 {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     @Override
     public void service(HttpServletRequest req , HttpServletResponse res) throws IOException,ServletException
     {
@@ -35,6 +38,7 @@ public class Code_check extends HttpServlet
         }
         }catch(Exception ex)
         {
+            LOG.warning("Failed due to Error: " + ex);
             res.sendRedirect(req.getContextPath()+"/Forgot_email_index.jsp");
         }
     }

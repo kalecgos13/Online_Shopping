@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
+LOG.warning("Failed due to Error: " + ex);
 /**
  *
  * @author Vicky
@@ -27,7 +27,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet(name = "upload_more_img", urlPatterns = {"/upload_more_img"})
 public class upload_more_img extends HttpServlet 
 {
-        private static final long serialVersionUID = 1L;
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,7 +61,7 @@ public class upload_more_img extends HttpServlet
                 Statement st = cnn.createStatement();
                 st.execute("insert into tbl_display_img values(null,"+ request.getParameter("pid") +",'images/productImages/"+fname+"')");
             } catch (Exception ex) {
-                request.setAttribute("message", "File Upload Failed due to " + ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
 
         } else {

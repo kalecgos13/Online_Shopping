@@ -17,10 +17,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
+import java.util.logging.*;
 
 @WebServlet(name = "Buy_items", urlPatterns = {"/Buy_items"})
 public class Buy_items extends HttpServlet {
-
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
         HttpSession usersession = req.getSession();
@@ -149,7 +151,7 @@ public class Buy_items extends HttpServlet {
             rd.forward(req, res);
 
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }

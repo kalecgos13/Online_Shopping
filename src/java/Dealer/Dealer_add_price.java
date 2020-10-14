@@ -12,7 +12,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpSession;
-
+import java.util.logging.*;
 /**
  *
  * @author Vicky
@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "Dealer_add_price", urlPatterns = {"/Dealer_add_price"})
 public class Dealer_add_price extends HttpServlet 
 {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req,HttpServletResponse res) throws IOException
     {
@@ -55,7 +57,7 @@ public class Dealer_add_price extends HttpServlet
         }
         catch(Exception ex)
         {
-            out.println(ex.toString());
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }
