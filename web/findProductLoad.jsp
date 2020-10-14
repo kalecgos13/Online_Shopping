@@ -17,6 +17,7 @@
     if (request.getParameter("searchbar") != null) {
         String searchText = request.getParameter("searchbar");
         String searches[] = searchText.split(" ");
+        int realLength = 0;
         if (searchText.length() >= 0) {
 
 
@@ -27,9 +28,11 @@
                 for (int i = 0; i < searches.length; i++) {                 // check the length over the 2 digit after then searching
                     if (searches[i].trim().length() > 2) {
                         if (i == 0) {
-                            sqlSearch += "p_name LIKE '%" + searches[i] + "%'";
+                            sqlSearch += "p_name LIKE '%?%'";
+                            realLength++;
                         } else {
-                            sqlSearch += " and tbl_product.p_company LIKE '%" + searches[i] + "%'";
+                            realLength++;
+                            sqlSearch += " and tbl_product.p_company LIKE '%?%'";
                         }
                     }
 
@@ -60,12 +63,20 @@
 
             <%
 
-
+                int[] intArr = new int[realLength];
+                Object[] objArr = new Object[realLength];
+                int index = 0;
+                for(int i = 0;i<searches.length;i++) {
+                    if (searches[i].trim().length() > 2) {
+                          intArr[index] = 1;
+                          objArr[index] = searches[i];
+                          index++;
+                    }
+                }
                 Database_connection obj_connection = new Database_connection();
                 Connection cnn = obj_connection.cnn;
                 Statement st = cnn.createStatement();
-                ResultSet rs = st.executeQuery(sqlSearch);
-
+                ResultSet rs = obj_connection.doPreparedQuery(sqlSearch, intArr, objArr);
                 while (rs.next()) {
                     int product_id = rs.getInt(1);
 

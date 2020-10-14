@@ -123,7 +123,7 @@
             if (request.getParameter("pid") != null) {
 
 
-                String query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id =" + productId;
+                String query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = ?";
 
 
                 String company = "", productName = "",
@@ -132,7 +132,7 @@
 
                 int quantity = 0, price = 0;
 
-                ResultSet rs = st.executeQuery(query);
+                ResultSet rs = obj_connection.doPreparedQuery(query, new int[]{0}, new Object[]{Integer.parseInt(productId)});
 
                 while (rs.next()) {
                     company = rs.getString(1);
