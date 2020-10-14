@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <%@page import="java.sql.*"%>
 <%@page import="database.*"%>
+<%@page import="java.util.logging.*"%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -85,7 +86,7 @@
     </head>
     <body>
 
-        <%
+        <%  Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
             if (session.getAttribute("user") == null) {// THen new user, show join now
 
                 response.sendRedirect(request.getContextPath() + "/index.jsp");
@@ -287,7 +288,7 @@
 
 
         <%      }
-  } catch (Exception ex) {%>
+  } catch (Exception ex) {LOG.warning("Failed due to Error: " + ex);%>
 
         <div class="container_16">
             <div class="grid_12 push_2" id="whiteBox">

@@ -11,6 +11,7 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="database.*"%>
+<%@page import="java.util.logging.*"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -123,7 +124,7 @@
 
 
                         try {
-
+                            Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
                             HashMap<Integer, Cart> hm = (HashMap<Integer, Cart>) session.getAttribute("Cart");
 
@@ -295,7 +296,7 @@
                     <%
 
                             } catch (Exception ex) {
-                                out.println(ex);
+                                LOG.warning("Failed due to Error: " + ex);
                             }
                         }
 
