@@ -54,7 +54,8 @@ public class Admin_add extends HttpServlet {
             else
             {
                 Algorithm_password a = new Algorithm_password();
-                String new_pass = a.Encrypt_password(password);
+                String salt = a.generate_salt();
+                String new_pass = a.Encrypt_password(password, salt);
                 
                 CallableStatement cb = cnn.prepareCall("{ call st_new_user(?,?,?,?)}");
                 cb.setString(1,email_id);
@@ -62,6 +63,8 @@ public class Admin_add extends HttpServlet {
                 cb.setString(3,"private");
                 cb.setString(4, name);
                 cb.execute();
+                
+                obj_connection.doPreparedUpdate("insert into tbl_login_salt(l_salt,l_id) values(?, (select l_id from tbl_login where l_email = ? and l_pass = ?))",new int[]{1,1,1}, new Object[]{salt,email_id,new_pass});
                 validation v = new validation(email_id,"hiii "+ email_id +" your password "+ password);
                 req.setAttribute("msg","Password successfully send Check your mail");
                 rd.forward(req, res);

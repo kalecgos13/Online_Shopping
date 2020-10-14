@@ -60,7 +60,8 @@ public class RegisterServlet extends HttpServlet {
 
 
                     Algorithm_password a = new Algorithm_password();
-                    String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"));
+                    String salt = a.generate_salt();
+                    String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"), salt);
                         
 
                     if (req.getParameter("type") != null) {
@@ -82,7 +83,7 @@ public class RegisterServlet extends HttpServlet {
                         cb.execute();
                         //st1.execute("insert into tbl_user_detail values(null," + lid + ",null,null,null,null,null,null,null,null,null,'" + dateFormat.format(date) + "','" + dateFormat.format(date) + "')");
                     }
-
+                    obj_connection.doPreparedUpdate("insert into tbl_login_salt(l_salt,l_id) values(?, (select l_id from tbl_login where l_email = ? and l_pass = ?))",new int[]{1,1,1}, new Object[]{salt,req.getParameter("emailReg"),Encrypt_pass});
 
 
                     req.setAttribute("message", "Successfully Registered");
