@@ -42,8 +42,8 @@
                 Cookie[] ck = request.getCookies();
                 if (ck != null) {
 
-                    String lid = session.getAttribute("lid");
-                    String type = session.getAttribute("type");
+                    String lid = (String) session.getAttribute("lid");
+                    String type = (String )session.getAttribute("type");
 
                     if (lid != null) {
                         HashMap<Integer, Cart> hm = new HashMap<Integer, Cart>();
