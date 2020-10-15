@@ -1,3 +1,5 @@
+package inputValidation;
+
 import java.io.IOException;
 import java.io.PrintWriter; 
 import java.lang.Character.*;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -21,9 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import database.*;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class InputValidationFilter implements Filter 
 {
@@ -76,7 +77,7 @@ public class InputValidationFilter implements Filter
 		}  
     }  
 	
-    public void destroy() {} 
+	public void destroy() {} 
 	
 	//_________________________________________________________________________________________________________
 	// getters and setters
@@ -214,7 +215,7 @@ public class InputValidationFilter implements Filter
 		}
 		//valideer
 		isFieldEmpty(field, req, resp);
-        matcher = pattern.matcher(field);
+		matcher = pattern.matcher(field);
 		if(this.genericFieldType == "String")
 		{
 			if(matcher.matches() == false && (this.fieldType == "Username" || this.fieldType == "Password")) 
