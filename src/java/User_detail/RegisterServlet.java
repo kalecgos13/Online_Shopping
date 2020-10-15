@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
 
         String type = "public";
         if (usersession.getAttribute("type") != null) {
-            type = usersession.getAttribute("type");
+            type = (String) usersession.getAttribute("type");
         }
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");

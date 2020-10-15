@@ -1,21 +1,33 @@
 package cutomer_email_send;
 
+import java.io.IOException;
+import java.io.InputStream;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 public class notification_via_email {
 
     String from, frompwd, d_host = "smtp.gmail.com", d_port = "465", to, subject, body;
 
     public notification_via_email(String email_id, String msg1) {
-        String from, frompwd;
+        String from = null, frompwd;
+        InputStream inputStream = null;
         try {
             String everything = IOUtils.toString(inputStream);
             from = everything.split("\n")[0];
             frompwd = everything.split("\n")[1];
+        } catch (IOException ex) {
+            Logger.getLogger(notification_via_email.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            inputStream.close();
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(notification_via_email.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         boolean fromAns = validation.isValidEmailAddress(from);
 

@@ -32,8 +32,8 @@ public class Forgot_email extends HttpServlet {
 
             if (check_email) {
                 Random r = new Random();
-                int Low = 1000000000;
-                int High = 9999999999;
+                int Low = 0;
+                int High = Integer.MAX_VALUE;
                 int Result = r.nextInt(High - Low) + Low;
                 HttpSession usersession = req.getSession();
                 usersession.setAttribute("Tmp_Email", email_id);
