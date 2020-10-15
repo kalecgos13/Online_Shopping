@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
             while(rs.next()) {
                 salt = rs.getString(1);
             }
-            String Encrypt_pass = a.Encrypt_password(pass, salt);
+            String Encrypt_pass = a.Encrypt_password(pass, salt, 10000, 512);
             rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email= ? and l_pass= ?", new int[]{1,1}, new Object[]{email,Encrypt_pass});
             while (rs.next()) {
                 lid = rs.getInt(1);

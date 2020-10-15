@@ -24,7 +24,7 @@ public class ChangeMyPass extends HttpServlet {
             Database_connection obj_connection = new Database_connection();
             Algorithm_password a = new Algorithm_password();
             String salt = a.generate_salt();
-            String new_pass = a.Encrypt_password(pass, salt);
+            String new_pass = a.Encrypt_password(pass, salt, 10000, 512);
             
             obj_connection.doPreparedUpdate("update tbl_login set l_pass= ? where l_email= ?", new int[]{1,1}, new Object[]{new_pass,email});
             obj_connection.doPreparedUpdate("update tbl_login_salt set l_salt = ? where l_id = (select l_id from tbl_login where l_email = ? and l_pass = ?)", new int[] {1,1,1}, new Object[]{salt, email, new_pass});

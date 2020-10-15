@@ -3,6 +3,14 @@ package Admin;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 
 public class Algorithm_password {
 
@@ -12,33 +20,27 @@ public class Algorithm_password {
         //run whenever change in password or new account
     public String generate_salt() {
         SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[32];
+        byte bytes[] = new byte[64];
         random.nextBytes(bytes);
-        String salt = bytesToHex(bytes);
+        String salt = Hex.encodeHexString(bytes);
         System.out.println(salt);
         return salt;
     }
     
-    public String Encrypt_password(String msg, String salt) {
-    	byte[] password = msg.getBytes();
-    	byte[] salted = hexStringToByteArray(salt);
-    	String hash = null;
-    	try {
-    		MessageDigest md = MessageDigest.getInstance("SHA-256");
-    		md.update(salted);
-    		byte[] bytes = md.digest(password);
-    		StringBuilder sb = new StringBuilder();
-    		for (int i = 0;i<bytes.length;i++) {
-    			sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-    		}
-    		hash = sb.toString();
-    	}
-    	catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+    public String Encrypt_password(String pass, String salt, int iterations, int keyLength) {
+        try {
+            char[] password = pass.toCharArray();
+            byte[] saltBytes = Hex.decodeHex(salt.toCharArray());
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+            PBEKeySpec spec = new PBEKeySpec(password, saltBytes, iterations, keyLength);
+            SecretKey key = skf.generateSecret(spec);
+            byte[] res = key.getEncoded();
+            return Hex.encodeHexString(res);
         }
-        return hash;
+        catch(NoSuchAlgorithmException | DecoderException | InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
     }
-    
     
     
     private final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();

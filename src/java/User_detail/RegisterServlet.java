@@ -61,7 +61,7 @@ public class RegisterServlet extends HttpServlet {
 
                     Algorithm_password a = new Algorithm_password();
                     String salt = a.generate_salt();
-                    String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"), salt);
+                    String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"), salt, 10000, 512);
                         
 
                     if (req.getParameter("type") != null) {

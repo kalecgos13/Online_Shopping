@@ -55,7 +55,7 @@ public class Admin_add extends HttpServlet {
             {
                 Algorithm_password a = new Algorithm_password();
                 String salt = a.generate_salt();
-                String new_pass = a.Encrypt_password(password, salt);
+                String new_pass = a.Encrypt_password(password, salt, 10000, 512);
                 
                 CallableStatement cb = cnn.prepareCall("{ call st_new_user(?,?,?,?)}");
                 cb.setString(1,email_id);

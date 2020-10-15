@@ -33,7 +33,7 @@ public class Reset_pass extends HttpServlet {
                     
                     Algorithm_password a = new Algorithm_password();
                     String salt = a.generate_salt();
-                    String new_pass = a.Encrypt_password(pass, salt);
+                    String new_pass = a.Encrypt_password(pass, salt, 10000, 512);
                     
                     Database_connection obj_connection = new Database_connection();   // change the password
                     Connection cnn = obj_connection.cnn;
