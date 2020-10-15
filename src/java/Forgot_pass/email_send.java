@@ -1,8 +1,14 @@
 package Forgot_pass;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 class Validation extends email_send {
     
@@ -29,13 +35,24 @@ public class email_send {
 
     public email_send(String email_id,int code) {
         //System.out.println("From(Mail): ");
-        FileInputStream inputStream = new FileInputStream("..\\totally_not_credentials.txt");
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream("..\\totally_not_credentials.txt");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(email_send.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             String everything = IOUtils.toString(inputStream);
             from = everything.split("\n")[0];
             frompwd = everything.split("\n")[1];
+        } catch (IOException ex) {
+            Logger.getLogger(email_send.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            inputStream.close();
+            try {
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(email_send.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         boolean fromAns = Validation.isValidEmailAddress(from);
 
