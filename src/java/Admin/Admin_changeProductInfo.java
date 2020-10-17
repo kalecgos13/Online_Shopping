@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import database.*;
 import javax.servlet.RequestDispatcher;
+import java.util.logging.*;
 
 @WebServlet(name = "Admin_changeProductInfo", urlPatterns = {"/Admin_changeProductInfo"})
 public class Admin_changeProductInfo extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -53,7 +55,7 @@ public class Admin_changeProductInfo extends HttpServlet {
             }
         } catch (Exception ex)
         {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }

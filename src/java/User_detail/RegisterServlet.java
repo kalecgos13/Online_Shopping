@@ -21,9 +21,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import Admin.*;
+import java.util.logging.*;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
 public class RegisterServlet extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -96,7 +98,7 @@ public class RegisterServlet extends HttpServlet {
                 rd.forward(req, res);
             }
         } catch (Exception ex) {
-            req.setAttribute("message", ex);
+            LOG.warning("Failed due to Error: " + ex);
             rd.forward(req, res);
         }
     }

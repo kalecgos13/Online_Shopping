@@ -14,12 +14,14 @@ import java.sql.Statement;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
-
+import java.util.logging.*;
 
 
 @WebServlet(name = "addUserDetalsServlet", urlPatterns = {"/addUserDetalsServlet"})
 public class addUserDetalsServlet extends HttpServlet 
 {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req , HttpServletResponse res) throws ServletException, IOException
     {
@@ -44,7 +46,7 @@ public class addUserDetalsServlet extends HttpServlet
         }
         catch(Exception ex)
         {
-             req.setAttribute("message",ex);
+             LOG.warning("Failed due to Error: " + ex);
              rd.forward(req, res);
         }
     }

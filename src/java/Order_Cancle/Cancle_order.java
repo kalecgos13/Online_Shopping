@@ -11,10 +11,12 @@ import database.*;
 import java.sql.*;
 import javax.servlet.RequestDispatcher;
 import cutomer_email_send.*;
+import java.util.logging.*;
         
 @WebServlet(name = "Cancle_order", urlPatterns = {"/Cancle_order"})
 public class Cancle_order extends HttpServlet {
-
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
@@ -51,7 +53,7 @@ public class Cancle_order extends HttpServlet {
                 rd.forward(req, res);
                 
             } catch (Exception ex) {
-                out.println(ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
         } else 
         {

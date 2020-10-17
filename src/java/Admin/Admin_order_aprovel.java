@@ -11,6 +11,7 @@ import database.*;
 import java.sql.*;
 import javax.servlet.http.HttpSession;
 import Admin.Admin_status_change;
+import java.util.logging.*;
 /**
  *
  * @author Vicky
@@ -20,13 +21,15 @@ import Admin.Admin_status_change;
 
 @WebServlet(name = "Admin_order_aprovel", urlPatterns = {"/Admin_order_aprovel"})
 public class Admin_order_aprovel extends HttpServlet {
-
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         HttpSession usersession = req.getSession();
         if (usersession.getAttribute("admin") == null) {
             res.sendRedirect(req.getContextPath() + "/index.jsp");
+            LOG.info("User is not an Admin. Therefore access denied.");
         } else {
 
             PrintWriter out = res.getWriter();
@@ -40,7 +43,7 @@ public class Admin_order_aprovel extends HttpServlet {
 
 
             } catch (Exception ex) {
-                out.println(ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
             finally
             {

@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import database.*;
 import java.sql.*;
 import Admin.*;
-
+import java.util.logging.*;
 
 @WebServlet(name = "ChangeMyPass", urlPatterns = {"/ChangeMyPass"})
 public class ChangeMyPass extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -32,7 +33,7 @@ public class ChangeMyPass extends HttpServlet {
             
         } catch (Exception ex) 
         {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }

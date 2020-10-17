@@ -18,9 +18,10 @@
 <%@ page  import="database.*"%>
 <%@ page  import="java.sql.*" %>
 <%@ page import="Admin.*"%>
+<%@page import="java.util.logging.*"%>
 
 <%
-
+    Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     if (session.getAttribute("admin") == null) {// THen new user, show join now
 
         response.sendRedirect(request.getContextPath() + "/index.jsp");
@@ -186,11 +187,11 @@
                 final File file1 = new File(getServletContext().getRealPath(".") + "/images/productImages/category" + month + year + ".png");
                 ChartUtilities.saveChartAsPNG(file1, barChart, 700, 450, info);
             } catch (Exception e) {
-                out.println(e);
+                LOG.warning("Saving chart as PNG Failed due to Error: " + e);
             }
 
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 

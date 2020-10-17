@@ -2,8 +2,10 @@ package Admin;
 
 import database.*;
 import java.sql.*;
+import java.util.logging.*;
 
 public class Admin_status_change extends Thread {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public int o_id;
     public String status;
@@ -15,6 +17,7 @@ public class Admin_status_change extends Thread {
         try {
             obj_connection = new Database_connection();
         } catch (Exception ex) {
+            LOG.warning("Admin_status_change() failed due to Error: " + ex);
         }
     }
 
@@ -27,7 +30,7 @@ public class Admin_status_change extends Thread {
         }
         catch(Exception ex)
         {
-            
+            LOG.warning("run() failed due to Error: " + ex);
         }
         
     }

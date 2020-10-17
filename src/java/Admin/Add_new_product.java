@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.servlet.RequestDispatcher;
+import java.util.logging.*;
 
 /**
  *
@@ -28,6 +29,7 @@ import javax.servlet.RequestDispatcher;
  */
 @WebServlet(name = "Add_new_product", urlPatterns = {"/Add_new_product"})
 public class Add_new_product extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
         PrintWriter out = res.getWriter();
@@ -77,7 +79,7 @@ public class Add_new_product extends HttpServlet {
 
 
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }

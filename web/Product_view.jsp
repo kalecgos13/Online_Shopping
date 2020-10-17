@@ -2,6 +2,7 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="database.*"%>
+<%@page import="java.util.logging.*"%>
 
 <style type="text/css">
     .prodGrid {
@@ -12,6 +13,7 @@
 </style>
 
 <%  int total_page = 0;
+    Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     {
         Database_connection obj_connection = new Database_connection();
         Connection cnn = obj_connection.cnn;
@@ -100,7 +102,7 @@
     <%
                 }
             } catch (Exception ex) {
-                out.println(ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
         }%>
 

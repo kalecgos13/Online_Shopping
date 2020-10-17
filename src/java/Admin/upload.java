@@ -20,13 +20,14 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import database.*;
 import java.sql.Connection;
 import java.sql.Statement;
-
+import java.util.logging.*;
 /**
  *
  * @author Vicky
  */
 @WebServlet(name = "upload", urlPatterns = {"/upload"})
 public class upload extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
     private static final long serialVersionUID = 1L;
     
@@ -64,7 +65,7 @@ public class upload extends HttpServlet {
                 request.setAttribute("msg", "successfully Image Upload");
                 
             } catch (Exception ex) {
-                request.setAttribute("message", "File Upload Failed due to " + ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
             
         } else {

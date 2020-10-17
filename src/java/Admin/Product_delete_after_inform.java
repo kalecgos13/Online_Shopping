@@ -5,9 +5,11 @@ import database.*;
 import cutomer_email_send.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.*;
 //import javassist.bytecode.Descriptor;
 
 public class Product_delete_after_inform extends Thread {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     int pid = 0;
 
@@ -63,9 +65,9 @@ public class Product_delete_after_inform extends Thread {
 
 
         } catch (SQLException ex) {
-            System.out.println(ex);
+            LOG.warning("run() Failed due to SQL Exception: " + ex);
         } catch (Exception ex) {
-            System.out.println(ex);
+            LOG.warning("run() Failed due to Error: " + ex);
         }
     }
 
@@ -80,7 +82,7 @@ public class Product_delete_after_inform extends Thread {
 
             } catch (Exception ex)
             {
-                System.out.println(ex);
+                LOG.warning("delete_product() Failed due to Error: " + ex);
             }
     }
 
@@ -104,6 +106,7 @@ public class Product_delete_after_inform extends Thread {
                 }
             }
         } catch (Exception ex) {
+            LOG.warning("check_bill_item() Failed due to Error: " + ex);
         }
     }
 }

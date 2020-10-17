@@ -12,9 +12,11 @@ import javax.servlet.http.HttpSession;
 import java.sql.*;
 import database.*;
 import Admin.*;
+import java.util.logging.*;
 
 @WebServlet(name = "Reset_pass", urlPatterns = {"/Reset_pass"})
 public class Reset_pass extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -30,7 +32,7 @@ public class Reset_pass extends HttpServlet {
             if (pass.equals(cpass)) {
 
                 try {
-                    
+                    LOG.info("Attempt to reset password of user: " + tmp_email);
                     Algorithm_password a = new Algorithm_password();
                     String salt = a.generate_salt();
                     String new_pass = a.Encrypt_password(pass, salt, 10000, 512);
@@ -44,9 +46,9 @@ public class Reset_pass extends HttpServlet {
                     usersession.invalidate();    // session invalid set 
                     req.setAttribute("message", "password successfully changed");
                     rd1.forward(req, res);
-                } catch (Exception ex) {
-                    req.setAttribute("message", ex);   // database related problem display
-                    rd.forward(req, res);
+                } catch (SQLException ex) {
+                    LOG.warning("Database operation Failed due to Error: " + ex);
+                    res.sendRedirect(req.getContextPath() + "/Forgot_email_index.jsp");
                 }
             } else {
                 req.setAttribute("message", "Both Password is Not Match");
@@ -57,7 +59,8 @@ public class Reset_pass extends HttpServlet {
                 res.sendRedirect(req.getContextPath()+"/index.jsp");
             }
         } catch (Exception ex) {
-            res.sendRedirect(req.getContextPath() + "/Forgot_email_index.jsp");
+            LOG.warning("Service failed due to Error: " + ex);
+            res.sendRedirect(req.getContextPath()+"/index.jsp");
         }
     }
 }

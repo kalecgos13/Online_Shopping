@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import java.util.logging.*;
 /**
  *
  * @author Vicky
@@ -16,12 +16,15 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "Admin_deliverorder", urlPatterns = {"/Admin_deliverorder"})
 public class Admin_deliverorder extends HttpServlet 
 {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
      @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         HttpSession usersession = req.getSession();
         if (usersession.getAttribute("admin") == null) {
             res.sendRedirect(req.getContextPath() + "/index.jsp");
+            LOG.info("User is not an Admin. Therefore access denied.");
         } else {
 
             PrintWriter out = res.getWriter();
@@ -35,7 +38,7 @@ public class Admin_deliverorder extends HttpServlet
 
 
             } catch (Exception ex) {
-                out.println(ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
             finally
             {

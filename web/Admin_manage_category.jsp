@@ -7,6 +7,7 @@
 <%@ page import="database.*"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="Admin.*"%>
+<%@page import="java.util.logging.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -27,6 +28,7 @@
 </script>
 
 <%
+    Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     Database_connection obj_connection = new Database_connection();
     Connection cnn = obj_connection.cnn;
     Statement st = cnn.createStatement();
@@ -49,7 +51,7 @@
                 new Product_delete_after_inform(rs.getInt(1)).start();
             }
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         } finally {
             int cid = 0;
             ResultSet rs = obj_connection.doPreparedQuery("select c_id from tbl_category where c_name = ?", new int[]{1}, new Object[]{request.getParameter("delcat")});
