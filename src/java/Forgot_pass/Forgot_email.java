@@ -23,9 +23,7 @@ public class Forgot_email extends HttpServlet {
         try {
             String email_id = req.getParameter("email");
             Database_connection obj_connection = new Database_connection();
-            Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
-            ResultSet rs = st.executeQuery("select * from tbl_login where l_email='" + email_id + "'");
+            ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email = ?", new int[]{1}, new Object[]{email_id});
             while (rs.next()) {
                 check_email = true;
             }
@@ -51,3 +49,4 @@ public class Forgot_email extends HttpServlet {
         }
     }
 }
+

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import database.*;
 import java.sql.*;
 import javax.servlet.RequestDispatcher;
+import java.util.logging.*;
 
 /**
  *
@@ -19,6 +20,7 @@ import javax.servlet.RequestDispatcher;
  */
 @WebServlet(name = "Admin_add", urlPatterns = {"/Admin_add"})
 public class Admin_add extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -27,6 +29,16 @@ public class Admin_add extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("Admin_new_add.jsp");
             String email_id = req.getParameter("email");
             String name = req.getParameter("fname");
+			
+			//BEGIN VALIDATION TEST
+			InputValidationFilter inputValidationFilter = new InputValidationFilter();
+			inputValidationFilter.setFilterSettings("String", "Username", 0, 50);
+			inputValidationFilter.doFilter(name, rd, req, resp);
+			
+			inputValidationFilter.setFilterSettings("Numeric", "Integer", 0, 15);
+			inputValidationFilter.doFilter(email_id, rd, req, resp);
+			//END VALIDATION TEST
+			
             Random r = new Random();
             int Low = 65;
             int High = 90;
@@ -37,10 +49,9 @@ public class Admin_add extends HttpServlet {
                 password += (char) Result;
             }
             
-            Database_connection obj_connection = new Database_connection();
+            Database_connection obj_connection = new Database_connection();          
             Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
-            ResultSet rs = st.executeQuery("select * from tbl_login where l_email ='"+ email_id+"'");
+            ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email = ?", new int[]{1}, new Object[]{email_id});
             boolean check = false;
             while(rs.next())
             {
@@ -55,7 +66,8 @@ public class Admin_add extends HttpServlet {
             else
             {
                 Algorithm_password a = new Algorithm_password();
-                String new_pass = a.Encrypt_password(password);
+                String salt = a.generate_salt();
+                String new_pass = a.Encrypt_password(password, salt, 10000, 512);
                 
                 CallableStatement cb = cnn.prepareCall("{ call st_new_user(?,?,?,?)}");
                 cb.setString(1,email_id);
@@ -63,6 +75,8 @@ public class Admin_add extends HttpServlet {
                 cb.setString(3,"private");
                 cb.setString(4, name);
                 cb.execute();
+                
+                obj_connection.doPreparedUpdate("insert into tbl_login_salt(l_salt,l_id) values(?, (select l_id from tbl_login where l_email = ? and l_pass = ?))",new int[]{1,1,1}, new Object[]{salt,email_id,new_pass});
                 validation v = new validation(email_id,"hiii "+ email_id +" your password "+ password);
                 req.setAttribute("msg","Password successfully send Check your mail");
                 rd.forward(req, res);
@@ -70,7 +84,7 @@ public class Admin_add extends HttpServlet {
             
         } catch (Exception ex)
         {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }

@@ -94,7 +94,7 @@
                                 <option value="">select Sub-Category</option>
 
                                 <%
-                                    rs1 = st1.executeQuery("select sub_id,sub_name from tbl_sub_cat where c_id = " + request.getParameter("cid")+" and status = 'true'");
+                                    rs1 = obj_connection.doPreparedQuery("select sub_id,sub_name from tbl_sub_cat where c_id = ? and status = 'true'", new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("cid"))});
                                     while (rs1.next()) {%>
 
                                 <option value="<%= rs1.getInt(1)%>"><%= rs1.getString(2)%></option>
@@ -150,9 +150,9 @@
 
                             if (request.getParameter("total") == null && request.getParameter("page") == null) {
                             //    out.println("select product if");
-                                query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,p_id from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.sub_id =" + request.getParameter("sid") + " and tbl_product.status = 'true' limit 0,20";
+                                query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,p_id from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.sub_id = ? and tbl_product.status = 'true' limit 0,20";
                                 Statement st2 = cnn.createStatement();
-                                ResultSet rs2 = st2.executeQuery("select count(*) from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.sub_id =" + request.getParameter("sid")+" and tbl_product.status = 'true'");
+                                ResultSet rs2 = obj_connection.doPreparedQuery("select count(*) from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.sub_id = ? and tbl_product.status = 'true'", new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("sid"))});
                                 while (rs2.next()) {
                                     int tmp = rs2.getInt(1);
                                     total_page = tmp / 20;
@@ -163,7 +163,7 @@
                             } else {
                             //    out.println("select product else");
                                 int tmp_page = Integer.parseInt(request.getParameter("page"));
-                                query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,p_id from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.sub_id =" + request.getParameter("sid") + " and tbl_product.status = 'true' limit " + (tmp_page - 1) * 20 + ",20";
+                                query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,p_id from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.sub_id = ? and tbl_product.status = 'true' limit " + (tmp_page - 1) * 20 + ",20";
                             }
                         }
 
@@ -178,7 +178,7 @@
                             <%
 
                                 //  String query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,p_id from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id";
-                                ResultSet rs = st.executeQuery(query);
+                                ResultSet rs = obj_connection.doPreparedQuery(query, new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("sid"))});
 
                                 while (rs.next()) {
                                     int product_id = rs.getInt(10);

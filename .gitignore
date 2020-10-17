@@ -23,3 +23,5 @@ totally_not_credentials.txt
 hs_err_pid*
 /build/
 /dist/
+build/*
+*.DS_Store*

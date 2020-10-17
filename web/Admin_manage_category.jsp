@@ -7,6 +7,7 @@
 <%@ page import="database.*"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="Admin.*"%>
+<%@page import="java.util.logging.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -27,6 +28,7 @@
 </script>
 
 <%
+    Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     Database_connection obj_connection = new Database_connection();
     Connection cnn = obj_connection.cnn;
     Statement st = cnn.createStatement();
@@ -37,22 +39,22 @@
     }
 
     if (request.getParameter("addcat") != null) {
-        st.execute("insert into tbl_category values(null,'" + request.getParameter("addcat") + "','true')");
+        obj_connection.doPreparedUpdate("insert into tbl_category values(null,?,'true')", new int[] {1}, new Object[]{request.getParameter("addcat")});
     }
     if (request.getParameter("changecat") != null && request.getParameter("oldcat") != null) {
-        st.execute("update tbl_category set c_name = '" + request.getParameter("changecat") + "' where c_name = '" + request.getParameter("oldcat") + "'");
+        obj_connection.doPreparedUpdate("update tbl_category set c_name = ? where c_name = ?", new int[]{1,1}, new Object[]{request.getParameter("changecat"), request.getParameter("oldcat")});
     }
     if (request.getParameter("delcat") != null) {
         try {
-            ResultSet rs = st.executeQuery("select p_id from tbl_product,tbl_sub_cat,tbl_category where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_category.c_name = '" + request.getParameter("delcat") + "'");
+            ResultSet rs = obj_connection.doPreparedQuery("select p_id from tbl_product,tbl_sub_cat,tbl_category where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_category.c_name = ?", new int[]{1}, new Object[]{request.getParameter("delcat")});
             while (rs.next()) {
                 new Product_delete_after_inform(rs.getInt(1)).start();
             }
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         } finally {
             int cid = 0;
-            ResultSet rs = st.executeQuery("select c_id from tbl_category where c_name = '" + request.getParameter("delcat") + "'");
+            ResultSet rs = obj_connection.doPreparedQuery("select c_id from tbl_category where c_name = ?", new int[]{1}, new Object[]{request.getParameter("delcat")});
             while (rs.next()) {
                 cid = rs.getInt(1);
             }

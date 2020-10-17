@@ -149,9 +149,7 @@
                 int pincode = 0;
 
                 Database_connection obj_connection = new Database_connection();
-                Connection cnn = obj_connection.cnn;
-                Statement st = cnn.createStatement();
-                ResultSet rs = st.executeQuery("select u_fname,u_contact,u_add,u_pincode from tbl_user_detail where l_id=" + session.getAttribute("user"));
+                ResultSet rs = obj_connection.doPreparedQuery("select u_fname,u_contact,u_add,u_pincode from tbl_user_detail where l_id=?", new int[]{0}, new Object[]{session.getAttribute("user")});
                 while (rs.next()) {
                     Username = rs.getString(1);
                     MobileNum = rs.getString(2);

@@ -5,9 +5,11 @@ import database.*;
 import cutomer_email_send.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.*;
 //import javassist.bytecode.Descriptor;
 
 public class Product_delete_after_inform extends Thread {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     int pid = 0;
 
@@ -17,14 +19,13 @@ public class Product_delete_after_inform extends Thread {
 
     @Override
     public void run() {
-        String query = "select l_id,p_name,tbl_order.o_id from tbl_order,tbl_order_detail,tbl_product where tbl_order.o_id = tbl_order_detail.o_id and tbl_order_detail.p_id = tbl_product.p_id and tbl_order.order_status = 'pending' and tbl_order_detail.p_id =" + pid;
-        String query1 = "select l_id,p_name,tbl_order.o_id from tbl_order,tbl_order_detail,tbl_product where tbl_order.o_id = tbl_order_detail.o_id and tbl_order_detail.p_id = tbl_product.p_id and tbl_order.order_status = 'approve' and tbl_order_detail.p_id =" + pid;
+        String query = "select l_id,p_name,tbl_order.o_id from tbl_order,tbl_order_detail,tbl_product where tbl_order.o_id = tbl_order_detail.o_id and tbl_order_detail.p_id = tbl_product.p_id and tbl_order.order_status = 'pending' and tbl_order_detail.p_id = ?";
+        String query1 = "select l_id,p_name,tbl_order.o_id from tbl_order,tbl_order_detail,tbl_product where tbl_order.o_id = tbl_order_detail.o_id and tbl_order_detail.p_id = tbl_product.p_id and tbl_order.order_status = 'approve' and tbl_order_detail.p_id = ?";
         try {
             Database_connection obj_connection = new Database_connection();
             Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
             Statement tmpst = cnn.createStatement();
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = obj_connection.doPreparedQuery(query,new int[]{0}, new Object[]{pid});
             ResultSet tmprs;
             ArrayList<Integer> lid = new ArrayList<Integer>();
             ArrayList<Integer> oid = new ArrayList<Integer>();
@@ -37,7 +38,7 @@ public class Product_delete_after_inform extends Thread {
                 p_name = rs.getString(2);
                 oid.add(rs.getInt(3));
             }
-            rs = st.executeQuery(query1);
+            rs = obj_connection.doPreparedQuery(query1, new int[]{0}, new Object[]{pid});
             while (rs.next()) // Approved Order All Data Store in ArrayList
             {
                 p_name = rs.getString(2);
@@ -64,9 +65,9 @@ public class Product_delete_after_inform extends Thread {
 
 
         } catch (SQLException ex) {
-            System.out.println(ex);
+            LOG.warning("run() Failed due to SQL Exception: " + ex);
         } catch (Exception ex) {
-            System.out.println(ex);
+            LOG.warning("run() Failed due to Error: " + ex);
         }
     }
 
@@ -81,7 +82,7 @@ public class Product_delete_after_inform extends Thread {
 
             } catch (Exception ex)
             {
-                System.out.println(ex);
+                LOG.warning("delete_product() Failed due to Error: " + ex);
             }
     }
 
@@ -105,6 +106,7 @@ public class Product_delete_after_inform extends Thread {
                 }
             }
         } catch (Exception ex) {
+            LOG.warning("check_bill_item() Failed due to Error: " + ex);
         }
     }
 }

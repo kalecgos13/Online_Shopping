@@ -7,6 +7,7 @@
 <%@ page import="database.*"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="Admin.*"%>
+<%@page import="java.util.logging.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -20,6 +21,7 @@
 
 
 <%
+    Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     Database_connection obj_connection = new Database_connection();
     Connection cnn = obj_connection.cnn;
     Statement st = cnn.createStatement();
@@ -31,24 +33,24 @@
 
 
     if (request.getParameter("addsub") != null && request.getParameter("catid") != null) {
-        st.execute("insert into tbl_sub_cat values(null," + request.getParameter("catid") + ",'" + request.getParameter("addsub") + "','true')");
+        obj_connection.doPreparedUpdate("insert into tbl_sub_cat values(null,?,?,'true')", new int[]{0,1}, new Object[]{Integer.parseInt(request.getParameter("catid")), request.getParameter("addsub")});
     }
     if (request.getParameter("changesubcat") != null && request.getParameter("oldsubcat") != null && request.getParameter("cid") != null) {
-        st.execute("update tbl_sub_cat set sub_name = '" + request.getParameter("changesubcat") + "' where sub_name = '" + request.getParameter("oldsubcat") + "' and c_id = " + request.getParameter("cid"));
+        obj_connection.doPreparedUpdate("update tbl_sub_cat set sub_name = ? where sub_name = ? and c_id = ?", new int[]{1,1,0}, new Object[]{request.getParameter("changesubcat"), request.getParameter("oldsubcat"), Integer.parseInt(request.getParameter("cid"))});
     }
     if (request.getParameter("delsub") != null && request.getParameter("catid") != null) {
 
         try {
-            ResultSet rs = st.executeQuery("select p_id from tbl_product,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.sub_name = '" + request.getParameter("delsub") + "' and tbl_sub_cat.c_id = " + request.getParameter("catid"));
+            ResultSet rs = obj_connection.doPreparedQuery("select p_id from tbl_product,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.sub_name = ? and tbl_sub_cat.c_id = ?", new int[]{1,0}, new Object[]{request.getParameter("delsub"), Integer.parseInt(request.getParameter("catid"))});
+            
             while (rs.next()) {
                 new Product_delete_after_inform(rs.getInt(1)).start();
             }
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         } finally {
             //        st.execute("delete from tbl_sub_cat where sub_name = '" + request.getParameter("delsub") + "' and c_id = " + request.getParameter("catid"));
-            st.execute("update tbl_sub_cat set status = 'false' where sub_name = '" + request.getParameter("delsub") + "' and c_id = " + request.getParameter("catid"));
-
+            obj_connection.doPreparedUpdate("update tbl_sub_cat set status = 'false' where sub_name = ? and c_id = ?", new int[]{0,1}, new Object[]{request.getParameter("delsub"), Integer.parseInt(request.getParameter("catid"))});
         }
 
 
@@ -112,7 +114,7 @@
                     <td>
 
                         <%
-                            rs = st.executeQuery("select sub_id,c_id,sub_name from tbl_sub_cat where c_id = " + request.getParameter("subcid")+" and status = 'true'");%>
+                            rs = obj_connection.doPreparedQuery("select sub_id,c_id,sub_name from tbl_sub_cat where c_id = ? and status = 'true'", new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("subcid"))});%>
 
                         <select id="subcat" style="margin:  +2px" data-parsley-required="true" onchange="subscat(this.value)">
 

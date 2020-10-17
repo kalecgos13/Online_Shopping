@@ -14,12 +14,14 @@ import java.sql.Statement;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
-
+import java.util.logging.*;
 
 
 @WebServlet(name = "addUserDetalsServlet", urlPatterns = {"/addUserDetalsServlet"})
 public class addUserDetalsServlet extends HttpServlet 
 {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req , HttpServletResponse res) throws ServletException, IOException
     {
@@ -28,31 +30,23 @@ public class addUserDetalsServlet extends HttpServlet
         try
         {
             Database_connection obj_connection = new Database_connection();
-            Connection cnn = obj_connection.cnn;
-            String query = "update tbl_user_detail set u_fname = ?,u_lname = ?,u_gender=?,u_contact=?,u_add= ?,u_city = ?,u_state= ?,u_country = ?,u_pincode = ? where l_id ="+usersession.getAttribute("user");
-            PreparedStatement ps = cnn.prepareStatement(query);
-            ps.setString(1,req.getParameter("fname"));
-            ps.setString(2,req.getParameter("lname"));
-            
-            ps.setString(3,req.getParameter("gender"));
-            ps.setString(4,req.getParameter("mobileNum"));
-            
-            ps.setString(5,req.getParameter("address"));
-            ps.setInt(6,1);
-            ps.setInt(7,1);
-            ps.setInt(8,1);
-            ps.setInt(9,Integer.parseInt(req.getParameter("pincode")));
-            
-            
-            ps.execute();
-            ps.close();
+            String query = "update tbl_user_detail set u_fname = ?,u_lname = ?,u_gender=?,u_contact=?,u_add= ?,u_city = ?,u_state= ?,u_country = ?,u_pincode = ? where l_id = ?";
+            obj_connection.doPreparedUpdate(query, new int[]{1,1,1,1,1,0,0,0,0}, new Object[]{
+            req.getParameter("fname"),
+            req.getParameter("lname"),
+            req.getParameter("gender"),
+            req.getParameter("mobileNum"),
+            req.getParameter("address"),
+            1,1,1,
+            Integer.parseInt(req.getParameter("pincode")),
+            usersession.getAttribute("user")});
           //  req.setAttribute("message","Success Fully The Change Detail");
           //  rd.forward(req, res);
             res.sendRedirect(req.getContextPath()+"/User_info.jsp");
         }
         catch(Exception ex)
         {
-             req.setAttribute("message",ex);
+             LOG.warning("Failed due to Error: " + ex);
              rd.forward(req, res);
         }
     }

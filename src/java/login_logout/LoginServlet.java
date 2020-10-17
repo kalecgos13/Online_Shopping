@@ -21,9 +21,11 @@ import java.util.HashMap;
 import javax.servlet.http.Cookie;
 import javax.ws.rs.core.Response;
 import Admin.*;
+import java.util.logging.*;
 
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -49,12 +51,14 @@ public class LoginServlet extends HttpServlet {
         String type = "";
         try {
             Database_connection obj_connection = new Database_connection();
-            Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
             Algorithm_password a = new Algorithm_password();
-            String Encrypt_pass = a.Encrypt_password(pass);
-            
-            ResultSet rs = st.executeQuery("select * from tbl_login where l_email='" + email + "' and l_pass='" + Encrypt_pass + "'");
+            String salt = null;
+            ResultSet rs = obj_connection.doPreparedQuery("select l_salt from tbl_login_salt where l_id = (select l_id from tbl_login where l_email = ?)", new int[]{1}, new Object[]{email});
+            while(rs.next()) {
+                salt = rs.getString(1);
+            }
+            String Encrypt_pass = a.Encrypt_password(pass, salt, 10000, 512);
+            rs = obj_connection.doPreparedQuery("select * from tbl_login where l_email= ? and l_pass= ?", new int[]{1,1}, new Object[]{email,Encrypt_pass});
             while (rs.next()) {
                 lid = rs.getInt(1);
                 type = rs.getString(4);
@@ -88,7 +92,7 @@ public class LoginServlet extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            req.setAttribute("message", "vicky-1 " + ex);
+            LOG.warning("Logging in Failed due to Error: " + ex);
 
             rd.forward(req, res);
         }
@@ -104,7 +108,7 @@ public class LoginServlet extends HttpServlet {
                 Statement st = cnn.createStatement();
                 st.execute("update tbl_user_detail set u_laste_date ='" + dateFormat.format(date) + "' where l_id = " + lid);
             } catch (Exception ex) {
-                req.setAttribute("message", "vicky-2 " + ex);
+                LOG.warning("Setting user last date Failed due to Error: " + ex);
                 rd.forward(req, res);
             }
             res.sendRedirect(usersession.getAttribute("back_to_page").toString());

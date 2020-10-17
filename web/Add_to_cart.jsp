@@ -11,6 +11,7 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="database.*"%>
+<%@page import="java.util.logging.*"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -121,9 +122,9 @@
                         //2. data will fetch and add into hashMap
                         //3. total HashMap Related Item Will Be display
 
-
+                        Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
                         try {
-
+                            
 
                             HashMap<Integer, Cart> hm = (HashMap<Integer, Cart>) session.getAttribute("Cart");
 
@@ -173,7 +174,7 @@
                                 Database_connection obj_connection = new Database_connection();
                                 Connection cnn = obj_connection.cnn;
                                 Statement st = cnn.createStatement();
-                                ResultSet rs = st.executeQuery("select * from tbl_product where p_id=" + pid);
+                                ResultSet rs = obj_connection.doPreparedQuery("select * from tbl_product where p_id=?", new int[]{0}, new Object[]{Integer.parseInt(pid)});
                                 while (rs.next()) {
                                     int tmp = rs.getInt(1);
                                     product_name = rs.getString(3);
@@ -295,7 +296,7 @@
                     <%
 
                             } catch (Exception ex) {
-                                out.println(ex);
+                                LOG.warning("Failed due to Error: " + ex);
                             }
                         }
 

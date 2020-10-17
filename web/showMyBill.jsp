@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <%@page import="java.sql.*"%>
 <%@page import="database.*"%>
+<%@page import="java.util.logging.*"%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -85,7 +86,7 @@
     </head>
     <body>
 
-        <%
+        <%  Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
             if (session.getAttribute("user") == null) {// THen new user, show join now
 
                 response.sendRedirect(request.getContextPath() + "/index.jsp");
@@ -107,11 +108,9 @@
                     if (request.getParameter("oid") != null) {
 
                         String OrderId = request.getParameter("oid");
-                        String query = "select u_fname,u_contact,u_add,u_pincode,order_date,l_email,order_status from tbl_order,tbl_user_detail,tbl_login where tbl_order.l_id=tbl_user_detail.l_id and tbl_order.l_id=tbl_login.l_id and tbl_order.o_id = " + OrderId;
+                        String query = "select u_fname,u_contact,u_add,u_pincode,order_date,l_email,order_status from tbl_order,tbl_user_detail,tbl_login where tbl_order.l_id=tbl_user_detail.l_id and tbl_order.l_id=tbl_login.l_id and tbl_order.o_id = ?";
                         Database_connection obj_connection = new Database_connection();
-                        Connection cnn = obj_connection.cnn;
-                        Statement st = cnn.createStatement();
-                        ResultSet rs = st.executeQuery(query);
+                        ResultSet rs = obj_connection.doPreparedQuery(query, new int[]{0}, new Object[]{Integer.parseInt(OrderId)});
                         while (rs.next()) {
                             String name,
                                     email, address, mobileNum, status;
@@ -217,8 +216,8 @@
 
 
 
-                        String query1 = " select p_name,p_price,user_qty,total from tbl_product,tbl_order_detail where tbl_product.p_id = tbl_order_detail.p_id and o_id = " + OrderId;
-                        rs = st.executeQuery(query1);
+                        String query1 = " select p_name,p_price,user_qty,total from tbl_product,tbl_order_detail where tbl_product.p_id = tbl_order_detail.p_id and o_id = ?";
+                        rs = obj_connection.doPreparedQuery(query1, new int[]{0}, new Object[]{Integer.parseInt(OrderId)});
 
                         String product_name;
                         double product_price;
@@ -287,7 +286,7 @@
 
 
         <%      }
-  } catch (Exception ex) {%>
+  } catch (Exception ex) {LOG.warning("Failed due to Error: " + ex);%>
 
         <div class="container_16">
             <div class="grid_12 push_2" id="whiteBox">

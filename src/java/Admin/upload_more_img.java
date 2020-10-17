@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
+import java.util.logging.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +28,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet(name = "upload_more_img", urlPatterns = {"/upload_more_img"})
 public class upload_more_img extends HttpServlet 
 {
-        private static final long serialVersionUID = 1L;
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -56,10 +59,9 @@ public class upload_more_img extends HttpServlet
                 //p_img='images/productImages/"+fname+"'
                 Database_connection obj_connection = new Database_connection();
                 Connection cnn = obj_connection.cnn;
-                Statement st = cnn.createStatement();
-                st.execute("insert into tbl_display_img values(null,"+ request.getParameter("pid") +",'images/productImages/"+fname+"')");
+                obj_connection.doPreparedUpdate("insert into tbl_display_img values(null,?,?)", new int[]{0,1}, new Object[]{Integer.parseInt(request.getParameter("pid")),"images/productImages/"+fname});
             } catch (Exception ex) {
-                request.setAttribute("message", "File Upload Failed due to " + ex);
+                LOG.warning("Failed due to Error: " + ex);
             }
 
         } else {

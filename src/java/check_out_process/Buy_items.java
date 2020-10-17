@@ -17,10 +17,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpSession;
+import java.util.logging.*;
 
 @WebServlet(name = "Buy_items", urlPatterns = {"/Buy_items"})
 public class Buy_items extends HttpServlet {
-
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException {
         HttpSession usersession = req.getSession();
@@ -37,7 +39,7 @@ public class Buy_items extends HttpServlet {
             Connection cnn = obj_connection.cnn;
             Statement st = cnn.createStatement();
             CallableStatement cs = cnn.prepareCall("{call user_buy_item1(?,?,?,?)}");
-            ResultSet rs = st.executeQuery("select u_fname from tbl_user_detail where l_id=" + usersession.getAttribute("user"));
+            ResultSet rs = obj_connection.doPreparedQuery("select u_fname from tbl_user_detail where l_id=?", new int[]{0}, new Object[]{usersession.getAttribute("user")});
             while (rs.next()) {
                 String f_name = rs.getString(1);
                 if (f_name == null) {
@@ -52,7 +54,7 @@ public class Buy_items extends HttpServlet {
                     Cart full_cart = (Cart) hm.get(i);
                     total += (full_cart.p_qty * full_cart.p_price);
                 }
-                st.execute("insert into tbl_order values(null," + Integer.parseInt(usersession.getAttribute("user").toString()) + ",'" + dateFormat.format(date) + "','Pending'," + total + ")");
+                obj_connection.doPreparedUpdate("insert into tbl_order values(null,?,?,'Pending',?)", new int[]{0,1,0}, new Object[]{usersession.getAttribute("user"),dateFormat.format(date),total});
                 rs = st.executeQuery("select max(o_id) from tbl_order");
                 while (rs.next()) {
                     billno = rs.getInt(1);
@@ -61,7 +63,7 @@ public class Buy_items extends HttpServlet {
                     Cart full_cart = (Cart) hm.get(i);
                     //     st.execute("insert into tbl_order_detail values(null,"+billno+","+full_cart.pid+","+full_cart.p_qty+","+(full_cart.p_qty * full_cart.p_price)+")");
                     int check_qty = 0;
-                    rs = st.executeQuery("select p_qty from tbl_product where p_id = " + full_cart.pid);
+                    rs = obj_connection.doPreparedQuery("select p_qty from tbl_product where p_id = ?", new int[]{0}, new Object[]{full_cart.pid});
                     while (rs.next()) {
                         check_qty = rs.getInt(1);
                     }
@@ -83,14 +85,13 @@ public class Buy_items extends HttpServlet {
                 String user_mobile = req.getParameter("mobile");
                 String user_address = req.getParameter("address");
                 int pincode = Integer.parseInt(req.getParameter("pincode"));
-
-                st.execute("update tbl_user_detail set u_fname ='" + user_first_name + "',u_contact='" + user_mobile + "',u_add='" + user_address + "',u_pincode=" + pincode + " where l_id=" + usersession.getAttribute("user"));
+                obj_connection.doPreparedUpdate("update tbl_user_detail set u_fname = ?,u_contact= ?,u_add= ?,u_pincode= ? where l_id= ?", new int[]{1,1,1,0,0}, new Object[]{user_first_name,user_mobile,user_address,pincode,usersession.getAttribute("user")});
                 int total = 0;
                 for (int i : hm.keySet()) {
                     Cart full_cart = (Cart) hm.get(i);
                     total += (full_cart.p_qty * full_cart.p_price);
                 }
-                st.execute("insert into tbl_order values(null," + Integer.parseInt(usersession.getAttribute("user").toString()) + ",'" + dateFormat.format(date) + "','Pending'," + total + ")");
+                obj_connection.doPreparedUpdate("insert into tbl_order values(null,?,?,'Pending',?)", new int[]{0,1,0}, new Object[]{usersession.getAttribute("user"),dateFormat.format(date),total});
                 rs = st.executeQuery("select max(o_id) from tbl_order");
                 while (rs.next()) {
                     billno = rs.getInt(1);
@@ -99,7 +100,7 @@ public class Buy_items extends HttpServlet {
                     Cart full_cart = (Cart) hm.get(i);
                     //         st.execute("insert into tbl_order_detail values(null,"+billno+","+full_cart.pid+","+full_cart.p_qty+","+(full_cart.p_qty * full_cart.p_price)+")");
                     int check_qty = 0;
-                    rs = st.executeQuery("select p_qty from tbl_product where p_id = " + full_cart.pid);
+                    rs = obj_connection.doPreparedQuery("select p_qty from tbl_product where p_id = ?", new int[]{0}, new Object[]{full_cart.pid});
                     while (rs.next()) {
                         check_qty = rs.getInt(1);
                     }
@@ -149,7 +150,7 @@ public class Buy_items extends HttpServlet {
             rd.forward(req, res);
 
         } catch (Exception ex) {
-            out.println(ex);
+            LOG.warning("Failed due to Error: " + ex);
         }
     }
 }

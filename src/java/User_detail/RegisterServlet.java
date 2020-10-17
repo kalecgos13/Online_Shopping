@@ -21,9 +21,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import Admin.*;
+import java.util.logging.*;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
 public class RegisterServlet extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -57,24 +59,22 @@ public class RegisterServlet extends HttpServlet {
                     Database_connection obj_connection = new Database_connection();
                     Connection cnn = obj_connection.cnn;
                     Statement st = cnn.createStatement();
-                    Statement st1 = cnn.createStatement();
 
 
                     Algorithm_password a = new Algorithm_password();
-                    String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"));
+                    String salt = a.generate_salt();
+                    String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"), salt, 10000, 512);
                         
 
                     if (usersession.getAttribute("type") != null) {
                         
-                        
-                        st1.execute("insert into tbl_login values(null,'" + req.getParameter("emailReg") + "','" + Encrypt_pass + "','" + type + "')");
-
+                        obj_connection.doPreparedUpdate("insert into tbl_login values(null,?,?,?)", new int[]{1,1,1}, new Object[]{req.getParameter("emailReg"),Encrypt_pass,type});
                         ResultSet rs = st.executeQuery("select max(l_id) from tbl_login");
                         while (rs.next()) {
                             lid = rs.getInt(1);
 
                         }
-                        st1.execute("insert into tbl_user_detail values(null," + lid + ",'" + req.getParameter("fname") + "','" + req.getParameter("lname") + "','" + req.getParameter("gender") + "','" + req.getParameter("mobileNum") + "','" + req.getParameter("address") + "',1,1,1,'" + req.getParameter("pincode") + "','" + dateFormat.format(date) + "','" + dateFormat.format(date) + "')");
+                        obj_connection.doPreparedUpdate("insert into tbl_user_detail values(null,?,?,?,?,?,?,1,1,1,?,?,?)", new int[]{0,1,1,1,1,1,0,1,1}, new Object[]{lid,req.getParameter("fname"),req.getParameter("lname"),req.getParameter("gender"),req.getParameter("mobileNum"),req.getParameter("address"),Integer.parseInt(req.getParameter("pincode")),dateFormat.format(date),dateFormat.format(date)});
                     } else 
                     {
                         CallableStatement cb = cnn.prepareCall("{call st_new_user(?,?,?,?)}");
@@ -85,7 +85,7 @@ public class RegisterServlet extends HttpServlet {
                         cb.execute();
                         //st1.execute("insert into tbl_user_detail values(null," + lid + ",null,null,null,null,null,null,null,null,null,'" + dateFormat.format(date) + "','" + dateFormat.format(date) + "')");
                     }
-
+                    obj_connection.doPreparedUpdate("insert into tbl_login_salt(l_salt,l_id) values(?, (select l_id from tbl_login where l_email = ? and l_pass = ?))",new int[]{1,1,1}, new Object[]{salt,req.getParameter("emailReg"),Encrypt_pass});
 
 
                     req.setAttribute("message", "Successfully Registered");
@@ -98,7 +98,7 @@ public class RegisterServlet extends HttpServlet {
                 rd.forward(req, res);
             }
         } catch (Exception ex) {
-            req.setAttribute("message", ex);
+            LOG.warning("Failed due to Error: " + ex);
             rd.forward(req, res);
         }
     }

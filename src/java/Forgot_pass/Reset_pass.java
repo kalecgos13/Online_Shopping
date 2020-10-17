@@ -12,9 +12,11 @@ import javax.servlet.http.HttpSession;
 import java.sql.*;
 import database.*;
 import Admin.*;
+import java.util.logging.*;
 
 @WebServlet(name = "Reset_pass", urlPatterns = {"/Reset_pass"})
 public class Reset_pass extends HttpServlet {
+    private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -30,21 +32,23 @@ public class Reset_pass extends HttpServlet {
             if (pass.equals(cpass)) {
 
                 try {
-                    
+                    LOG.info("Attempt to reset password of user: " + tmp_email);
                     Algorithm_password a = new Algorithm_password();
-                    String new_pass = a.Encrypt_password(pass);
+                    String salt = a.generate_salt();
+                    String new_pass = a.Encrypt_password(pass, salt, 10000, 512);
                     
                     Database_connection obj_connection = new Database_connection();   // change the password
                     Connection cnn = obj_connection.cnn;
                     Statement st = cnn.createStatement();
-                    st.execute("update tbl_login set l_pass='"+new_pass+"' where l_email='"+tmp_email+"'");
+                    obj_connection.doPreparedUpdate("update tbl_login set l_pass= ? where l_email= ?", new int[]{1,1}, new Object[]{new_pass,tmp_email});
+                    obj_connection.doPreparedUpdate("update tbl_login_salt set l_salt = ? where l_id = (select l_id from tbl_login where l_email = ? and l_pass = ?)", new int[] {1,1,1}, new Object[]{salt, tmp_email, new_pass});
                     
                     usersession.invalidate();    // session invalid set 
                     req.setAttribute("message", "password successfully changed");
                     rd1.forward(req, res);
-                } catch (Exception ex) {
-                    req.setAttribute("message", ex);   // database related problem display
-                    rd.forward(req, res);
+                } catch (SQLException ex) {
+                    LOG.warning("Database operation Failed due to Error: " + ex);
+                    res.sendRedirect(req.getContextPath() + "/Forgot_email_index.jsp");
                 }
             } else {
                 req.setAttribute("message", "Both Password is Not Match");
@@ -55,7 +59,8 @@ public class Reset_pass extends HttpServlet {
                 res.sendRedirect(req.getContextPath()+"/index.jsp");
             }
         } catch (Exception ex) {
-            res.sendRedirect(req.getContextPath() + "/Forgot_email_index.jsp");
+            LOG.warning("Service failed due to Error: " + ex);
+            res.sendRedirect(req.getContextPath()+"/index.jsp");
         }
     }
 }
