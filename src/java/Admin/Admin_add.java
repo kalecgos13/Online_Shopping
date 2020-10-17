@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import database.*;
+import inputValidation.InputValidationFilter;
 import java.sql.*;
 import javax.servlet.RequestDispatcher;
 import java.util.logging.*;
@@ -33,10 +34,10 @@ public class Admin_add extends HttpServlet {
 			//BEGIN VALIDATION TEST
 			InputValidationFilter inputValidationFilter = new InputValidationFilter();
 			inputValidationFilter.setFilterSettings("String", "Username", 0, 50);
-			inputValidationFilter.doFilter(name, rd, req, resp);
+			inputValidationFilter.doFilter(name, rd, req, res);
 			
 			inputValidationFilter.setFilterSettings("Numeric", "Integer", 0, 15);
-			inputValidationFilter.doFilter(email_id, rd, req, resp);
+			inputValidationFilter.doFilter(email_id, rd, req, res);
 			//END VALIDATION TEST
 			
             Random r = new Random();

@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 
 import database.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InputValidationFilter implements Filter 
 {
@@ -149,7 +151,13 @@ public class InputValidationFilter implements Filter
 	public void showErrorMessage(String errMsg, RequestDispatcher rd, ServletRequest req, ServletResponse resp)
 	{
 		req.setAttribute("msg", errMsg);
-		rd.forward(req, resp);
+            try {
+                rd.forward(req, resp);
+            } catch (ServletException ex) {
+                Logger.getLogger(InputValidationFilter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(InputValidationFilter.class.getName()).log(Level.SEVERE, null, ex);
+            }
 		return;
 	}
 	
@@ -157,13 +165,13 @@ public class InputValidationFilter implements Filter
 	{
 		if (field == null || "".equals(field)) 
 		{
-			showErrorMessage("Field(s) are empty", req, resp);
+			showErrorMessage("Field(s) are empty", rd, req, resp);
 		} 
 	}
 	
 	public void validateField(String field, RequestDispatcher rd, ServletRequest req, ServletResponse resp)
 	{
-		Pattern pattern;
+		Pattern pattern = null;
 		Matcher matcher;
 		
 		if(this.genericFieldType == "String")
@@ -186,11 +194,11 @@ public class InputValidationFilter implements Filter
 			else if(this.fieldType == "Email")
 			{
 				boolean validEmail = EmailValidator.getInstance().isValid(field);
-				isFieldEmpty(field, req, resp);
+				isFieldEmpty(field, rd, req, resp);
 				if(!validEmail)
 				{
 					//loggen in de database
-					showErrorMessage(this.fieldType + " not valid!", req, resp); //break doet hij in de functie zelf
+					showErrorMessage(this.fieldType + " not valid!", rd, req, resp); //break doet hij in de functie zelf
 				}
 			}
 			
@@ -214,14 +222,14 @@ public class InputValidationFilter implements Filter
 			}
 		}
 		//valideer
-		isFieldEmpty(field, req, resp);
+		isFieldEmpty(field, rd, req, resp);
 		matcher = pattern.matcher(field);
 		if(this.genericFieldType == "String")
 		{
 			if(matcher.matches() == false && (this.fieldType == "Username" || this.fieldType == "Password")) 
 			{
 				//loggen in de database
-				showErrorMessage(this.fieldType + " not valid!", req, resp);
+				showErrorMessage(this.fieldType + " not valid!", rd, req, resp);
 			}
 
 			else if(matcher.matches() == false && this.fieldType == "Search box input")
@@ -242,20 +250,20 @@ public class InputValidationFilter implements Filter
 				if(matcher.matches() == false && (this.fieldType == "Integer" || this.fieldType == "Float")) 
 				{
 					//loggen in de database
-					showErrorMessage("Number not valid!", req, resp);
+					showErrorMessage("Number not valid!", rd, req, resp);
 				}
 				
 				if(String.valueOf(field).length() < this.expectedMinimumLength || String.valueOf(field).length() > this.expectedMaximumLength)
 				{
 					//loggen in de database
-					showErrorMessage("Number not valid!", req, resp);
+					showErrorMessage("Number not valid!", rd, req, resp);
 				}
 			}
 			
 			else
 			{
 				//loggen in de database
-				showErrorMessage("Number not valid!", req, resp);
+				showErrorMessage("Number not valid!", rd, req, resp);
 			}
 		}
 		
@@ -264,6 +272,11 @@ public class InputValidationFilter implements Filter
 			//loggen want dit is gevaarlijk denk ik
 		}
 	}
+
+    @Override
+    public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 
 }
