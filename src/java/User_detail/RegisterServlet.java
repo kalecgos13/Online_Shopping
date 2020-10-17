@@ -38,8 +38,8 @@ public class RegisterServlet extends HttpServlet {
         }
 
         String type = "public";
-        if (req.getParameter("type") != null) {
-            type = "dealer";
+        if (usersession.getAttribute("type") != null) {
+            type = (String) usersession.getAttribute("type");
         }
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -66,7 +66,7 @@ public class RegisterServlet extends HttpServlet {
                     String Encrypt_pass = a.Encrypt_password(req.getParameter("passReg"), salt, 10000, 512);
                         
 
-                    if (req.getParameter("type") != null) {
+                    if (usersession.getAttribute("type") != null) {
                         
                         obj_connection.doPreparedUpdate("insert into tbl_login values(null,?,?,?)", new int[]{1,1,1}, new Object[]{req.getParameter("emailReg"),Encrypt_pass,type});
                         ResultSet rs = st.executeQuery("select max(l_id) from tbl_login");
