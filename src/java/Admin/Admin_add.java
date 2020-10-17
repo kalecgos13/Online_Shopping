@@ -29,6 +29,16 @@ public class Admin_add extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("Admin_new_add.jsp");
             String email_id = req.getParameter("email");
             String name = req.getParameter("fname");
+			
+			//BEGIN VALIDATION TEST
+			InputValidationFilter inputValidationFilter = new InputValidationFilter();
+			inputValidationFilter.setFilterSettings("String", "Username", 0, 50);
+			inputValidationFilter.doFilter(name, rd, req, resp);
+			
+			inputValidationFilter.setFilterSettings("Numeric", "Integer", 0, 15);
+			inputValidationFilter.doFilter(email_id, rd, req, resp);
+			//END VALIDATION TEST
+			
             Random r = new Random();
             int Low = 65;
             int High = 90;
