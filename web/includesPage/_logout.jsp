@@ -28,8 +28,7 @@
 
         Database_connection obj_connection = new Database_connection();
         Connection cnn = obj_connection.cnn;
-        Statement st = cnn.createStatement();
-        ResultSet rs = st.executeQuery("select l_email,u_fname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id =" + session.getAttribute("user"));
+        ResultSet rs = obj_connection.doPreparedQuery("select l_email,u_fname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id = ?", new int[]{0}, new Object[]{session.getAttribute("user")});
         while (rs.next()) {
             email = rs.getString(1);
             userName = rs.getString(2);
@@ -120,9 +119,7 @@
                             msg.add("Total " + total_approve + " Orders Approve Today");
 
                         }
-                         
-                       Statement st2 = cnn.createStatement();
-                        ResultSet resultset = st2.executeQuery("select p_name,tbl_special_product.p_id from tbl_product,tbl_special_product where tbl_product.p_id = tbl_special_product.p_id and tbl_special_product.l_id = " + session.getAttribute("user")+" and tbl_product.status = 'true'");
+                        ResultSet resultset = obj_connection.doPreparedQuery("select p_name,tbl_special_product.p_id from tbl_product,tbl_special_product where tbl_product.p_id = tbl_special_product.p_id and tbl_special_product.l_id = ? and tbl_product.status = 'true'", new int[]{0}, new Object[]{session.getAttribute("user")});
                         int total_special = 0;
                         while (resultset.next()) {
                             
@@ -160,8 +157,7 @@
 
                         ArrayList<String> p_name = new ArrayList<String>();
                         ArrayList<Integer> p_id = new ArrayList<Integer>();
-                        Statement st1 = cnn.createStatement();
-                        ResultSet rs1 = st1.executeQuery("select p_name,tbl_special_product.p_id from tbl_product,tbl_special_product where tbl_product.p_id = tbl_special_product.p_id and tbl_product.status = 'true' and tbl_special_product.l_id = " + session.getAttribute("user"));
+                        ResultSet rs1 = obj_connection.doPreparedQuery("select p_name,tbl_special_product.p_id from tbl_product,tbl_special_product where tbl_product.p_id = tbl_special_product.p_id and tbl_product.status = 'true' and tbl_special_product.l_id = ?", new int[]{0}, new Object[]{session.getAttribute("user")});
                         int total_special = 0;
                         while (rs1.next()) {
                             

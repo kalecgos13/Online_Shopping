@@ -25,9 +25,7 @@ public class Dealer_delete_price extends HttpServlet
         try
         {
             Database_connection obj_connection = new Database_connection();
-            Connection cnn = obj_connection.cnn;
-            Statement st = cnn.createStatement();
-            st.execute("delete from tbl_dealer where l_id ="+ usersession.getAttribute("dealer") +" and p_id ="+req.getParameter("pid"));
+            obj_connection.doPreparedUpdate("delete from tbl_dealer where l_id = ? and p_id = ?", new int[]{0,0}, new Object[]{usersession.getAttribute("dealer"),Integer.parseInt(req.getParameter("pid"))});
              String referer = req.getHeader("Referer");
             res.sendRedirect(referer);
         }

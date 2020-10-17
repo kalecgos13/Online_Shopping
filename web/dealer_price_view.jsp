@@ -87,8 +87,7 @@
 
                     Database_connection obj_connection = new Database_connection();
                     Connection cnn = obj_connection.cnn;
-                    Statement st = cnn.createStatement();
-                    ResultSet rs = st.executeQuery("select u_fname,u_contact,l_email,d_last_date,d_price from tbl_user_detail,tbl_login,tbl_dealer where tbl_login.l_id = tbl_dealer.l_id and tbl_user_detail.l_id = tbl_dealer.l_id and tbl_dealer.p_id = " + request.getParameter("pid") + " order by d_price");
+                    ResultSet rs = obj_connection.doPreparedQuery("select u_fname,u_contact,l_email,d_last_date,d_price from tbl_user_detail,tbl_login,tbl_dealer where tbl_login.l_id = tbl_dealer.l_id and tbl_user_detail.l_id = tbl_dealer.l_id and tbl_dealer.p_id = ? order by d_price", new int[]{0}, new Object[]{Integer.parseInt(request.getParameter("pid"))});
                     while (rs.next()) {
                         Username = rs.getString(1);
                         MobileNum = rs.getString(2);

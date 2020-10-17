@@ -42,7 +42,7 @@
 
         month = request.getParameter("month");
         year = request.getParameter("year");
-        q1 = " and tbl_order.order_date between '" + year + "-" + month + "-01' and '" + year + "-" + month + "-31'";
+        q1 = " and tbl_order.order_date between ?-?-01' and ?-?-31'";
 
 
         //else {
@@ -165,8 +165,7 @@
 
             ResultSet rs = st.executeQuery("select c_id,c_name from tbl_category");
             while (rs.next()) {
-                Statement st1 = cnn.createStatement();
-                ResultSet rs1 = st1.executeQuery(query + rs.getInt(1) + q1);
+                ResultSet rs1 = obj_connection.doPreparedQuery(query + rs.getInt(1) + q1, new int[]{1,1,1,1}, new Object[]{year,month,year,month});
                 String c_name = rs.getString(2);
                 while (rs1.next()) {
                     dataset.addValue(rs1.getInt(1), c_name, speed);

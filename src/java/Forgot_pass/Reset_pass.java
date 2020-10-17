@@ -32,12 +32,14 @@ public class Reset_pass extends HttpServlet {
                 try {
                     
                     Algorithm_password a = new Algorithm_password();
-                    String new_pass = a.Encrypt_password(pass);
+                    String salt = a.generate_salt();
+                    String new_pass = a.Encrypt_password(pass, salt, 10000, 512);
                     
                     Database_connection obj_connection = new Database_connection();   // change the password
                     Connection cnn = obj_connection.cnn;
                     Statement st = cnn.createStatement();
-                    st.execute("update tbl_login set l_pass='"+new_pass+"' where l_email='"+tmp_email+"'");
+                    obj_connection.doPreparedUpdate("update tbl_login set l_pass= ? where l_email= ?", new int[]{1,1}, new Object[]{new_pass,tmp_email});
+                    obj_connection.doPreparedUpdate("update tbl_login_salt set l_salt = ? where l_id = (select l_id from tbl_login where l_email = ? and l_pass = ?)", new int[] {1,1,1}, new Object[]{salt, tmp_email, new_pass});
                     
                     usersession.invalidate();    // session invalid set 
                     req.setAttribute("message", "password successfully changed");

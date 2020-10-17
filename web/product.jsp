@@ -104,7 +104,7 @@
                 }
                 if (b) {
                     Statement st3 = cnn.createStatement();
-                    ResultSet rs3 = st3.executeQuery("select * from tbl_special_product where l_id = " + session.getAttribute("user"));
+                    ResultSet rs3 = obj_connection.doPreparedQuery("select * from tbl_special_product where l_id = ?", new int[]{0}, new Object[]{session.getAttribute("user")});
                     boolean login_check = true;
                     while (rs3.next()) {
 

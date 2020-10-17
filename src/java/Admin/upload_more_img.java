@@ -56,8 +56,7 @@ public class upload_more_img extends HttpServlet
                 //p_img='images/productImages/"+fname+"'
                 Database_connection obj_connection = new Database_connection();
                 Connection cnn = obj_connection.cnn;
-                Statement st = cnn.createStatement();
-                st.execute("insert into tbl_display_img values(null,"+ request.getParameter("pid") +",'images/productImages/"+fname+"')");
+                obj_connection.doPreparedUpdate("insert into tbl_display_img values(null,?,?)", new int[]{0,1}, new Object[]{Integer.parseInt(request.getParameter("pid")),"images/productImages/"+fname});
             } catch (Exception ex) {
                 request.setAttribute("message", "File Upload Failed due to " + ex);
             }

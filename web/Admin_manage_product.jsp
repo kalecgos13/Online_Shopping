@@ -178,7 +178,7 @@
             if (request.getParameter("pid") != null) {
 
 
-                String query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,old_price from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id =" + productId;
+                String query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,old_price from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = ?";
 
 
                 String company = "", productName = "",
@@ -199,7 +199,7 @@
 
                 // all the images add in this array list 
 
-                ResultSet rs = st.executeQuery(query);
+                ResultSet rs = obj_connection.doPreparedQuery(query, new int[]{1}, new Object[]{Integer.parseInt(productId)});
 
                 while (rs.next()) {
                     company = rs.getString(1);
@@ -342,8 +342,7 @@
 
                     boolean b = true;
                     int d_price = 0;
-                    Statement st2 = cnn.createStatement();
-                    ResultSet rs2 = st2.executeQuery("select d_price from tbl_dealer where l_id = " + session.getAttribute("dealer") + " and p_id = " + request.getParameter("pid"));
+                    ResultSet rs2 = obj_connection.doPreparedQuery("select d_price from tbl_dealer where l_id = ? and p_id = ?", new int[]{0,0}, new Object[]{session.getAttribute("dealer"), Integer.parseInt(request.getParameter("pid"))});
                     while (rs2.next()) {
                         b = false;
                         d_price = rs2.getInt(1);

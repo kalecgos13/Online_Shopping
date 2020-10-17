@@ -53,8 +53,7 @@
                     boolean b = false;
                     Database_connection obj_connection = new Database_connection();
                     Connection cnn = obj_connection.cnn;
-                    Statement tmpst = cnn.createStatement();
-                    ResultSet tmprs = tmpst.executeQuery("select * from tbl_dealer where l_id = " + session.getAttribute("dealer"));
+                    ResultSet tmprs = obj_connection.doPreparedQuery("select * from tbl_dealer where l_id = ?", new int[]{0}, new Object[]{session.getAttribute("dealer")});
                     while (tmprs.next()) {
                         b = true;
                     }
@@ -97,7 +96,7 @@
                             Statement st1 = cnn.createStatement();
 
                             if (request.getParameter("did") != null) {
-                                st1.execute("delete from tbl_dealer where p_id = " + request.getParameter("did") + " and l_id = " + session.getAttribute("dealer"));
+                                obj_connection.doPreparedUpdate("delete from tbl_dealer where p_id = ? and l_id = ?", new int[]{0,0}, new Object[]{Integer.parseInt(request.getParameter("did")), session.getAttribute("dealer")});
                             }
 
 
@@ -118,11 +117,11 @@
 
                         Statement st = cnn.createStatement();
                         String query = "";
-                        query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,tbl_product.p_id,tbl_dealer.d_price from tbl_product,tbl_category,tbl_sub_cat,tbl_dealer where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = tbl_dealer.p_id and tbl_dealer.l_id = " + session.getAttribute("dealer") + " and tbl_product.status = 'true' limit 0,10";
+                        query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,tbl_product.p_id,tbl_dealer.d_price from tbl_product,tbl_category,tbl_sub_cat,tbl_dealer where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = tbl_dealer.p_id and tbl_dealer.l_id = ? and tbl_product.status = 'true' limit 0,10";
                         int total_page = 0;
                         if (request.getParameter("total") == null && request.getParameter("page") == null) {
                             Statement st2 = cnn.createStatement();
-                            ResultSet rs1 = st2.executeQuery("select count(*) from tbl_product,tbl_category,tbl_sub_cat,tbl_dealer where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = tbl_dealer.p_id and tbl_dealer.l_id = " + session.getAttribute("dealer"));
+                            ResultSet rs1 = obj_connection.doPreparedQuery("select count(*) from tbl_product,tbl_category,tbl_sub_cat,tbl_dealer where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = tbl_dealer.p_id and tbl_dealer.l_id = ?", new int[]{0}, new Object[]{session.getAttribute("dealer")});
                             while (rs1.next()) {
                                 int tmp = rs1.getInt(1);
                                 total_page = tmp / 10;
@@ -134,7 +133,7 @@
                         else
                         {
                             int tmp_page = Integer.parseInt(request.getParameter("page"));
-                            query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,tbl_product.p_id,tbl_dealer.d_price from tbl_product,tbl_category,tbl_sub_cat,tbl_dealer where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = tbl_dealer.p_id and tbl_dealer.l_id = " + session.getAttribute("dealer") + " and status = 'true' limit "+ (tmp_page-1)*10 +",10";
+                            query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,tbl_product.p_id,tbl_dealer.d_price from tbl_product,tbl_category,tbl_sub_cat,tbl_dealer where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id and tbl_product.p_id = tbl_dealer.p_id and tbl_dealer.l_id = ? and status = 'true' limit "+ (tmp_page-1)*10 +",10";
                         }
 
 
@@ -150,7 +149,7 @@
                             <%
 
                                 //  String query = "select p_company,p_name,c_name,sub_name,p_qty,p_price,p_desc,p_img,p_type,p_id from tbl_product,tbl_category,tbl_sub_cat where tbl_product.sub_id = tbl_sub_cat.sub_id and tbl_sub_cat.c_id = tbl_category.c_id";
-                                ResultSet rs = st.executeQuery(query);
+                                ResultSet rs = obj_connection.doPreparedQuery(query, new int[]{0}, new Object[]{session.getAttribute("dealer")});
 
                                 while (rs.next()) {
                                     int product_id = rs.getInt(10);

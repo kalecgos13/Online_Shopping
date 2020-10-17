@@ -216,8 +216,7 @@
 
                 Database_connection obj_connection = new Database_connection();
                 Connection cnn = obj_connection.cnn;
-                Statement st = cnn.createStatement();
-                ResultSet rs = st.executeQuery("select l_email,u_fname,u_lname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id =" + session.getAttribute("user"));
+                ResultSet rs = obj_connection.doPreparedQuery("select l_email,u_fname,u_lname from tbl_login,tbl_user_detail where tbl_login.l_id = tbl_user_detail.l_id and tbl_login.l_id = ?", new int[]{0}, new Object[]{session.getAttribute("user")});
                 while (rs.next()) {
                     email = rs.getString(1);
                     userName = rs.getString(2);
@@ -286,7 +285,7 @@
                         <%
                             int billno = 0;
                             String order_date = null;
-                            rs = st.executeQuery(" select o_id,order_date from tbl_order where l_id="+session.getAttribute("user")+" order by o_id desc");
+                            rs = obj_connection.doPreparedQuery("select o_id,order_date from tbl_order where l_id=? order by o_id desc", new int[]{0}, new Object[]{session.getAttribute("user")});
                             while(rs.next())
                             {
                                 billno = rs.getInt(1);
@@ -473,7 +472,7 @@
 
                     int pincode = 0;
 
-                    rs = st.executeQuery("select * from tbl_user_detail where l_id = " + session.getAttribute("user"));
+                    rs = obj_connection.doPreparedQuery("select * from tbl_user_detail where l_id = ?", new int[]{0}, new Object[]{session.getAttribute("user")});
                     while (rs.next()) {
 
                         fname = rs.getString(3);
