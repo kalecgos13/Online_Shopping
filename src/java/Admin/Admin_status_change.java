@@ -17,7 +17,7 @@ public class Admin_status_change extends Thread {
         try {
             obj_connection = new Database_connection();
         } catch (Exception ex) {
-            LOG.warning("Admin_status_change() failed due to Error: " + ex);
+            LOG.warning("Failed to create a database connection due to Error: " + ex);
         }
     }
 
@@ -30,7 +30,7 @@ public class Admin_status_change extends Thread {
         }
         catch(Exception ex)
         {
-            LOG.warning("run() failed due to Error: " + ex);
+            LOG.warning("Failed to update order status due to Error: " + ex);
         }
         
     }
