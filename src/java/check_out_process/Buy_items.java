@@ -123,6 +123,7 @@ public class Buy_items extends HttpServlet {
             if (Erorr.equals("")) 
             {
                 req.setAttribute("message", "Order will be placed Check Account");
+				LOG.info("User " + usersession.getAttribute("user") + " has SUCCESFULLY placed an order for: " + hm);
                 
             } else {
                 
@@ -136,6 +137,8 @@ public class Buy_items extends HttpServlet {
                 
                 if(tmpcheck > 0)
                 {
+					LOG.info("User " + usersession.getAttribute("user") + " has placed an order for: " + hm);
+					LOG.info("The products for this order are out of stock");
                     req.setAttribute("message",tmpmsg);
                     req.setAttribute("message1", "But " + Erorr + " Out OF Stock");
                 }
@@ -143,6 +146,8 @@ public class Buy_items extends HttpServlet {
                 {
                     st.execute("delete from tbl_order where o_id = "+billno);
                     tmpmsg = "Your Order Will be Cancle";
+					LOG.info("User " + usersession.getAttribute("user") + " has placed an order for: " + hm);
+					LOG.info("The order has been canceled.");
                     req.setAttribute("message",tmpmsg);
                     req.setAttribute("message1", "Because" + Erorr + " Out OF Stock");
                 }
