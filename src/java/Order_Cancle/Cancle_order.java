@@ -47,7 +47,10 @@ public class Cancle_order extends HttpServlet {
                 String msg = "Hi "+fname+" Your Order "+oid+" Successfully Cancle Thnx For Visit Our Saikiran BookStore";
                 
                 validation v = new validation(email,msg);
-                
+				
+				HttpSession usersession = req.getSession();
+                LOG.info("The order of user " + usersession.getAttribute("user") + " with order ID " + oid + " has SUCCESFULLY been canceled");
+				
                 RequestDispatcher rd = req.getRequestDispatcher("message1.jsp");
                 req.setAttribute("message","Order Successfully Cancle");
                 rd.forward(req, res);
